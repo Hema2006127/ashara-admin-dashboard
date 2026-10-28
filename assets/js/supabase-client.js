@@ -37,15 +37,15 @@ class AsharaDBClient {
      * جلب سجلات العينات المرفوعة
      */
     async fetchLetterSamples(limit = 10000) {
-        const url = ${this.config.SUPABASE_URL}/rest/v1/letter_samples?select=id,contributor,letter,sample_count,created_at&order=created_at.desc&limit=;
+        const url = `${this.config.SUPABASE_URL}/rest/v1/letter_samples?select=id,contributor,letter,sample_count,created_at&order=created_at.desc&limit=${limit}`;
         const headers = {
-            apikey: this.config.SUPABASE_KEY,
-            Authorization: Bearer 
+            "apikey": this.config.SUPABASE_KEY,
+            "Authorization": `Bearer ${this.config.SUPABASE_KEY}`
         };
 
         const res = await fetch(url, { headers });
         if (!res.ok) {
-            throw new Error(خطأ في جلب بيانات Supabase: );
+            throw new Error(`خطأ في جلب بيانات Supabase: ${res.status}`);
         }
         return await res.json();
     }
@@ -55,10 +55,10 @@ class AsharaDBClient {
      */
     async fetchAppUpdates() {
         try {
-            const url = ${this.config.SUPABASE_URL}/rest/v1/app_updates?is_active=eq.true&order=id.desc&limit=1;
+            const url = `${this.config.SUPABASE_URL}/rest/v1/app_updates?is_active=eq.true&order=id.desc&limit=1`;
             const headers = {
-                apikey: this.config.SUPABASE_KEY,
-                Authorization: Bearer 
+                "apikey": this.config.SUPABASE_KEY,
+                "Authorization": `Bearer ${this.config.SUPABASE_KEY}`
             };
             const res = await fetch(url, { headers });
             if (res.ok) {
@@ -66,7 +66,7 @@ class AsharaDBClient {
                 return rows && rows.length > 0 ? rows[0] : null;
             }
         } catch (e) {
-            console.warn(تعذر جلب التحديثات:, e);
+            console.warn("تعذر جلب التحديثات:", e);
         }
         return null;
     }
@@ -87,20 +87,20 @@ class AsharaDBClient {
         // إذا كان الجهاز غير متصل بالإنترنت، نحفظها محلياً فوراً
         if (!navigator.onLine) {
             this._saveToPendingQueue(payload);
-            return { success: true, offline: true, message: تم الحفظ محلياً لعدم توفر إنترنت };
+            return { success: true, offline: true, message: "تم الحفظ محلياً لعدم توفر إنترنت" };
         }
 
         try {
-            const url = ${this.config.SUPABASE_URL}/rest/v1/letter_samples;
+            const url = `${this.config.SUPABASE_URL}/rest/v1/letter_samples`;
             const headers = {
-                apikey: this.config.SUPABASE_KEY,
-                Authorization: Bearer ,
-                Content-Type: application/json,
-                Prefer: return=minimal
+                "apikey": this.config.SUPABASE_KEY,
+                "Authorization": `Bearer ${this.config.SUPABASE_KEY}`,
+                "Content-Type": "application/json",
+                "Prefer": "return=minimal"
             };
 
             const response = await fetch(url, {
-                method: POST,
+                method: "POST",
                 headers,
                 body: JSON.stringify(payload)
             });
@@ -108,14 +108,14 @@ class AsharaDBClient {
             if (response.ok || response.status === 201) {
                 return { success: true, offline: false };
             } else {
-                console.warn(Supabase POST error: . Fallback to local queue.);
+                console.warn(`Supabase POST error: ${response.status}. Fallback to local queue.`);
                 this._saveToPendingQueue(payload);
-                return { success: true, offline: true, message: تعذر الاتصال بالسيرفر - تم الحفظ محلياً };
+                return { success: true, offline: true, message: "تعذر الاتصال بالسيرفر - تم الحفظ محلياً" };
             }
         } catch (error) {
-            console.warn(Network error during upload. Saving to local storage:, error);
+            console.warn("Network error during upload. Saving to local storage:", error);
             this._saveToPendingQueue(payload);
-            return { success: true, offline: true, message: خطأ شبكة - تم الحفظ محلياً };
+            return { success: true, offline: true, message: "خطأ شبكة - تم الحفظ محلياً" };
         }
     }
 
@@ -132,7 +132,7 @@ class AsharaDBClient {
             });
             localStorage.setItem(this.pendingQueueKey, JSON.stringify(queue));
         } catch (e) {
-            console.error(فشل الحفظ في localStorage:, e);
+            console.error("فشل الحفظ في localStorage:", e);
         }
     }
 
@@ -161,12 +161,12 @@ class AsharaDBClient {
         for (let i = 0; i < queue.length; i++) {
             const item = queue[i];
             try {
-                const url = ${this.config.SUPABASE_URL}/rest/v1/letter_samples;
+                const url = `${this.config.SUPABASE_URL}/rest/v1/letter_samples`;
                 const headers = {
-                    apikey: this.config.SUPABASE_KEY,
-                    Authorization: Bearer ,
-                    Content-Type: application/json,
-                    Prefer: return=minimal
+                    "apikey": this.config.SUPABASE_KEY,
+                    "Authorization": `Bearer ${this.config.SUPABASE_KEY}`,
+                    "Content-Type": "application/json",
+                    "Prefer": "return=minimal"
                 };
 
                 const body = {
@@ -208,11 +208,11 @@ class AsharaDBClient {
         const queue = this.getPendingQueue();
         if (queue.length === 0) return false;
 
-        const blob = new Blob([JSON.stringify(queue, null, 2)], { type: application/json });
+        const blob = new Blob([JSON.stringify(queue, null, 2)], { type: "application/json" });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement(a);
+        const a = document.createElement("a");
         a.href = url;
-        a.download = shara_backup_samples_.json;
+        a.download = `ashara_backup_samples_${new Date().toISOString().slice(0, 10)}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -246,12 +246,12 @@ class AsharaDBClient {
                     }
                 })
                 .subscribe((status) => {
-                    console.log(Supabase Realtime Channel Status:, status);
+                    console.log("Supabase Realtime Channel Status:", status);
                 });
 
             return this.realtimeChannel;
         } catch (e) {
-            console.warn(Realtime subscription failed:, e);
+            console.warn("Realtime subscription failed:", e);
             return null;
         }
     }

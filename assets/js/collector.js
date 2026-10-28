@@ -11,7 +11,7 @@ class AsharaCollectorEngine {
 
         this.currentLetterIndex = 0;
         this.contributor = localStorage.getItem('ashara_contributor_name') || 'عضو_المشروع';
-        
+
         // MediaPipe & Camera state
         this.camera = null;
         this.hands = null;
@@ -103,11 +103,11 @@ class AsharaCollectorEngine {
 
     _updateSoundButtonUI(btn) {
         if (this.audio.isMuted()) {
-            btn.innerHTML = '<i class=fa-solid fa-volume-xmark></i> الصوت مكتوم';
+            btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> الصوت مكتوم';
             btn.classList.add('btn-outline');
             btn.classList.remove('btn-primary');
         } else {
-            btn.innerHTML = '<i class=fa-solid fa-volume-high></i> المؤثرات مفعلة';
+            btn.innerHTML = '<i class="fa-solid fa-volume-high"></i> المؤثرات مفعلة';
             btn.classList.add('btn-primary');
             btn.classList.remove('btn-outline');
         }
@@ -131,12 +131,12 @@ class AsharaCollectorEngine {
 
     async _initMediaPipe() {
         if (!window.Hands) {
-            console.error(MediaPipe Hands script not loaded from CDN.);
+            console.error("MediaPipe Hands script not loaded from CDN.");
             return;
         }
 
         this.hands = new window.Hands({
-            locateFile: (file) => https://cdn.jsdelivr.net/npm/@mediapipe/hands/
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
         });
 
         this.hands.setOptions({
@@ -165,11 +165,13 @@ class AsharaCollectorEngine {
 
             await this.camera.start();
             this.isCameraRunning = true;
-            document.getElementById('hud-camera-status').innerHTML = '<i class=fa-solid fa-video></i> الكاميرا متصلة';
+            const statusElem = document.getElementById('hud-camera-status');
+            if (statusElem) statusElem.innerHTML = '<i class="fa-solid fa-video"></i> الكاميرا متصلة';
         } catch (err) {
-            console.error(Camera access error:, err);
-            document.getElementById('hud-camera-status').innerHTML = '<i class=fa-solid fa-video-slash></i> تعذر فتح الكاميرا';
-            alert(يرجى السماح بصلاحية الوصول إلى الكاميرا من إعدادات المتصفح.);
+            console.error("Camera access error:", err);
+            const statusElem = document.getElementById('hud-camera-status');
+            if (statusElem) statusElem.innerHTML = '<i class="fa-solid fa-video-slash"></i> تعذر فتح الكاميرا';
+            alert("يرجى السماح بصلاحية الوصول إلى الكاميرا من إعدادات المتصفح.");
         }
     }
 
@@ -195,7 +197,7 @@ class AsharaCollectorEngine {
             const count = results.multiHandLandmarks.length;
             const handedness = results.multiHandedness[0]?.label || 'Right';
             const handLabel = count === 1 ? (handedness === 'Left' ? 'اليد اليسرى' : 'اليد اليمنى') : 'اليدين معاً';
-            if (handHud) handHud.innerHTML = <i class=fa-solid fa-hand></i>  مكتشفة;
+            if (handHud) handHud.innerHTML = `<i class="fa-solid fa-hand"></i> ${handLabel} مكتشفة`;
 
             // Draw skeleton & landmarks
             for (let i = 0; i < results.multiHandLandmarks.length; i++) {
@@ -211,10 +213,10 @@ class AsharaCollectorEngine {
             if (stabilityHud) {
                 if (this.isHandStable) {
                     stabilityHud.className = 'hud-badge hud-stability stable';
-                    stabilityHud.innerHTML = '<i class=fa-solid fa-circle-check></i> اليد مستقرة وجاهزة';
+                    stabilityHud.innerHTML = '<i class="fa-solid fa-circle-check"></i> اليد مستقرة وجاهزة';
                 } else {
                     stabilityHud.className = 'hud-badge hud-stability unstable';
-                    stabilityHud.innerHTML = '<i class=fa-solid fa-triangle-exclamation></i> ثبت يدك أمام الكاميرا';
+                    stabilityHud.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> ثبت يدك أمام الكاميرا';
                 }
             }
 
@@ -230,10 +232,10 @@ class AsharaCollectorEngine {
                 }
             }
         } else {
-            if (handHud) handHud.innerHTML = '<i class=fa-solid fa-hand-dots></i> في انتظار اليد...';
+            if (handHud) handHud.innerHTML = '<i class="fa-solid fa-hand-dots"></i> في انتظار اليد...';
             if (stabilityHud) {
                 stabilityHud.className = 'hud-badge hud-stability';
-                stabilityHud.innerHTML = '<i class=fa-regular fa-circle-pause></i> ضع يدك في الكادر';
+                stabilityHud.innerHTML = '<i class="fa-regular fa-circle-pause"></i> ضع يدك في الكادر';
             }
             this.isHandStable = false;
         }
@@ -252,7 +254,7 @@ class AsharaCollectorEngine {
             for (let i = 0; i < results.multiHandLandmarks.length; i++) {
                 const landmarks = results.multiHandLandmarks[i];
                 const label = results.multiHandedness[i]?.label || 'Right';
-                
+
                 const flat = [];
                 for (const p of landmarks) {
                     flat.push(p.x, p.y, p.z);
@@ -274,7 +276,7 @@ class AsharaCollectorEngine {
      */
     _drawCustomHandSkeleton(landmarks, w, h, isLeft) {
         const ctx = this.canvasCtx;
-        const colorMain = isLeft ? '#06b6d4' : '#10b981'; // Cyan for left, Emerald for right
+        const colorMain = isLeft ? '#06b6d4' : '#10b981';
         const colorPoint = '#ffffff';
 
         // Connective hand bones (MediaPipe Hands connections)
@@ -307,7 +309,7 @@ class AsharaCollectorEngine {
         ctx.shadowBlur = 4;
         for (let i = 0; i < landmarks.length; i++) {
             const pt = landmarks[i];
-            const radius = (i === 4 || i === 8 || i === 12 || i === 16 || i === 20) ? 6 : 4; // Larger on fingertips
+            const radius = (i === 4 || i === 8 || i === 12 || i === 16 || i === 20) ? 6 : 4;
             ctx.fillStyle = (i === 4 || i === 8 || i === 12 || i === 16 || i === 20) ? colorMain : colorPoint;
             ctx.beginPath();
             ctx.arc(pt.x * w, pt.y * h, radius, 0, 2 * Math.PI);
@@ -335,19 +337,23 @@ class AsharaCollectorEngine {
         }
 
         const avgSpeed = totalDist / this.recentWristPositions.length;
-        this.isHandStable = avgSpeed < 0.035; // عتبة استقرار اليد المناسبة
+        this.isHandStable = avgSpeed < 0.035;
     }
 
     toggleRecord() {
         if (this.isCountingDown) return;
 
         if (this.isRecording) {
-            // Cancel current recording
             this.isRecording = false;
             this.currentRoundSamples = [];
-            document.getElementById('recording-ring-box').style.display = 'none';
-            document.getElementById('btn-start-record').innerHTML = '<i class=fa-solid fa-play></i> بدء تسجيل الجولة (مسافة)';
-            document.getElementById('btn-start-record').className = 'btn btn-emerald btn-lg record-btn-main';
+            const ringBox = document.getElementById('recording-ring-box');
+            if (ringBox) ringBox.style.display = 'none';
+
+            const startBtn = document.getElementById('btn-start-record');
+            if (startBtn) {
+                startBtn.innerHTML = '<i class="fa-solid fa-play"></i> بدء تسجيل الجولة (مسافة)';
+                startBtn.className = 'btn btn-emerald btn-lg record-btn-main';
+            }
             return;
         }
 
@@ -355,23 +361,23 @@ class AsharaCollectorEngine {
         this.isCountingDown = true;
         const overlay = document.getElementById('countdown-overlay');
         const numElem = document.getElementById('countdown-number');
-        overlay.classList.add('active');
+        if (overlay) overlay.classList.add('active');
 
         let count = 3;
-        numElem.innerText = count;
+        if (numElem) numElem.innerText = count;
         this.audio.playCountdownTick();
 
         const timer = setInterval(() => {
             count--;
             if (count > 0) {
-                numElem.innerText = count;
+                if (numElem) numElem.innerText = count;
                 this.audio.playCountdownTick();
             } else if (count === 0) {
-                numElem.innerText = ابدأ!;
+                if (numElem) numElem.innerText = "ابدأ!";
                 this.audio.playStartBeep();
             } else {
                 clearInterval(timer);
-                overlay.classList.remove('active');
+                if (overlay) overlay.classList.remove('active');
                 this.isCountingDown = false;
                 this._startRecordingSession();
             }
@@ -381,28 +387,34 @@ class AsharaCollectorEngine {
     _startRecordingSession() {
         this.isRecording = true;
         this.currentRoundSamples = [];
-        document.getElementById('recording-ring-box').style.display = 'flex';
+        const ringBox = document.getElementById('recording-ring-box');
+        if (ringBox) ringBox.style.display = 'flex';
         this._updateRecordProgress();
 
         const btn = document.getElementById('btn-start-record');
-        btn.innerHTML = '<i class=fa-solid fa-stop></i> إيقاف التسجيل (مسافة)';
-        btn.className = 'btn btn-danger btn-lg record-btn-main';
+        if (btn) {
+            btn.innerHTML = '<i class="fa-solid fa-stop"></i> إيقاف التسجيل (مسافة)';
+            btn.className = 'btn btn-danger btn-lg record-btn-main';
+        }
     }
 
     _updateRecordProgress() {
         const cur = this.currentRoundSamples.length;
         const total = this.targetSamples;
         const counter = document.getElementById('recording-counter');
-        if (counter) counter.innerText = ${cur} /  عينة;
+        if (counter) counter.innerText = `${cur} / ${total} عينة`;
     }
 
     async _finishCurrentRound() {
         this.isRecording = false;
-        document.getElementById('recording-ring-box').style.display = 'none';
+        const ringBox = document.getElementById('recording-ring-box');
+        if (ringBox) ringBox.style.display = 'none';
 
         const btn = document.getElementById('btn-start-record');
-        btn.innerHTML = '<i class=fa-solid fa-spinner fa-spin></i> جاري الرفع...';
-        btn.disabled = true;
+        if (btn) {
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الرفع...';
+            btn.disabled = true;
+        }
 
         this.audio.playSuccessChime();
 
@@ -413,9 +425,11 @@ class AsharaCollectorEngine {
         // Upload to Supabase
         const result = await this.db.uploadBatch(this.contributor, letter, samplesToUpload);
 
-        btn.disabled = false;
-        btn.innerHTML = '<i class=fa-solid fa-play></i> بدء تسجيل الجولة (مسافة)';
-        btn.className = 'btn btn-emerald btn-lg record-btn-main';
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-play"></i> بدء تسجيل الجولة (مسافة)';
+            btn.className = 'btn btn-emerald btn-lg record-btn-main';
+        }
 
         // Update local contributor counts
         const currentCount = this.contributorCounts[letter] || 0;
@@ -428,8 +442,8 @@ class AsharaCollectorEngine {
         this._checkOfflineQueue();
 
         const toastMsg = result.offline
-            ? تم حفظ 50 عينة محلياً لـ [] (سيتم رفعها تلقائياً)
-            : تم رفع 50 عينة بنجاح لـ [] إلى Supabase! 🎉;
+            ? `تم حفظ 50 عينة محلياً لـ [${letter}] (سيتم رفعها تلقائياً)`
+            : `تم رفع 50 عينة بنجاح لـ [${letter}] إلى Supabase! 🎉`;
 
         this.showToast(toastMsg);
     }
@@ -455,11 +469,18 @@ class AsharaCollectorEngine {
         const info = this.config.LETTER_INFO[this.currentLetterIndex];
         const letter = this.config.LETTERS[this.currentLetterIndex];
 
-        document.getElementById('guide-char-name').innerText = info.name;
-        document.getElementById('guide-char-overlay').innerText = info.char;
-        document.getElementById('guide-angle-text').innerText = info.angle;
-        document.getElementById('guide-hint-text').innerText = info.hint;
-        
+        const charName = document.getElementById('guide-char-name');
+        if (charName) charName.innerText = info.name;
+
+        const charOverlay = document.getElementById('guide-char-overlay');
+        if (charOverlay) charOverlay.innerText = info.char;
+
+        const angleText = document.getElementById('guide-angle-text');
+        if (angleText) angleText.innerText = info.angle;
+
+        const hintText = document.getElementById('guide-hint-text');
+        if (hintText) hintText.innerText = info.hint;
+
         const imgElem = document.getElementById('guide-reference-img');
         if (imgElem) {
             imgElem.src = info.image;
@@ -470,19 +491,24 @@ class AsharaCollectorEngine {
         const target = this.config.TARGET_PER_LETTER;
         const pct = Math.min(100, Math.round((count / target) * 100));
 
-        document.getElementById('guide-samples-progress').innerText = ${count} /  عينة;
-        document.getElementById('guide-progress-bar').style.width = ${pct}%;
+        const samplesProgress = document.getElementById('guide-samples-progress');
+        if (samplesProgress) samplesProgress.innerText = `${count} / ${target} عينة`;
+
+        const progressBar = document.getElementById('guide-progress-bar');
+        if (progressBar) progressBar.style.width = `${pct}%`;
 
         const statusTag = document.getElementById('guide-status-tag');
-        if (count >= target) {
-            statusTag.className = 'guide-badge status-done';
-            statusTag.innerText = 'مكتمل ✅';
-        } else if (count > 0) {
-            statusTag.className = 'guide-badge status-inprogress';
-            statusTag.innerText = 'قيد الجمع ⏳';
-        } else {
-            statusTag.className = 'guide-badge status-empty';
-            statusTag.innerText = 'لم يبدأ ❌';
+        if (statusTag) {
+            if (count >= target) {
+                statusTag.className = 'guide-badge status-done';
+                statusTag.innerText = 'مكتمل ✅';
+            } else if (count > 0) {
+                statusTag.className = 'guide-badge status-inprogress';
+                statusTag.innerText = 'قيد الجمع ⏳';
+            } else {
+                statusTag.className = 'guide-badge status-empty';
+                statusTag.innerText = 'لم يبدأ ❌';
+            }
         }
     }
 
@@ -496,11 +522,11 @@ class AsharaCollectorEngine {
             const isActive = idx === this.currentLetterIndex;
             const count = this.contributorCounts[l] || 0;
 
-            btn.className = letter-chip-btn ;
-            btn.innerHTML = 
-                <span class=letter-chip-char></span>
-                <span class=letter-chip-count></span>
-            ;
+            btn.className = `letter-chip-btn ${isActive ? 'active' : ''}`;
+            btn.innerHTML = `
+                <span class="letter-chip-char">${l}</span>
+                <span class="letter-chip-count">${count}</span>
+            `;
 
             btn.addEventListener('click', () => this.setLetter(idx));
             container.appendChild(btn);
@@ -518,10 +544,10 @@ class AsharaCollectorEngine {
         });
 
         const totalElem = document.getElementById('contributor-total-samples');
-        if (totalElem) totalElem.innerText = ${total.toLocaleString()} عينة;
+        if (totalElem) totalElem.innerText = `${total.toLocaleString()} عينة`;
 
         const completedElem = document.getElementById('contributor-completed-letters');
-        if (completedElem) completedElem.innerText = ${completedLetters} / 31 حرف;
+        if (completedElem) completedElem.innerText = `${completedLetters} / 31 حرف`;
     }
 
     _checkOfflineQueue() {
@@ -542,7 +568,7 @@ class AsharaCollectorEngine {
         const syncBtn = document.getElementById('btn-sync-offline');
         if (syncBtn) {
             syncBtn.disabled = true;
-            syncBtn.innerHTML = '<i class=fa-solid fa-spinner fa-spin></i> جاري المزامنة...';
+            syncBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري المزامنة...';
         }
 
         const res = await this.db.syncPendingBatches();
@@ -550,10 +576,10 @@ class AsharaCollectorEngine {
 
         if (syncBtn) {
             syncBtn.disabled = false;
-            syncBtn.innerHTML = '<i class=fa-solid fa-cloud-arrow-up></i> مزامنة السحاب الآن';
+            syncBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> مزامنة السحاب الآن';
         }
 
-        this.showToast(تمت مزامنة  دفعة مع Supabase بنجاح!);
+        this.showToast(`تمت مزامنة ${res.synced} دفعة مع Supabase بنجاح!`);
     }
 
     showToast(message) {
@@ -563,7 +589,7 @@ class AsharaCollectorEngine {
             toast.id = 'realtime-toast';
             document.body.appendChild(toast);
         }
-        toast.innerHTML = <i class=fa-solid fa-bell></i> ;
+        toast.innerHTML = `<i class="fa-solid fa-bell"></i> ${message}`;
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 3500);
     }

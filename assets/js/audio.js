@@ -52,7 +52,7 @@ class AsharaAudio {
             osc.start();
             osc.stop(this.ctx.currentTime + duration);
         } catch (e) {
-            console.warn(Audio playback error:, e);
+            console.warn("Audio playback error:", e);
         }
     }
 
@@ -97,7 +97,7 @@ class AsharaAudio {
             playNote(783.99, 0.24, 0.25); // G5
             playNote(1046.50, 0.36, 0.50); // C6
         } catch (e) {
-            console.warn(Audio success playback error:, e);
+            console.warn("Audio success playback error:", e);
         }
     }
 

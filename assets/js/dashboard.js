@@ -113,15 +113,27 @@ class AsharaDashboardEngine {
         const activeContribCount = Object.keys(contribMap).length;
 
         // Update DOM Stat Cards
-        document.getElementById('val-total-samples').innerText = totalSamples.toLocaleString();
-        document.getElementById('val-active-contributors').innerText = activeContribCount;
-        document.getElementById('val-completed-letters').innerText = ${completedLetters} / ;
-        document.getElementById('val-completion-rate').innerText = ${percent}%;
+        const totalElem = document.getElementById('val-total-samples');
+        if (totalElem) totalElem.innerText = totalSamples.toLocaleString();
+
+        const contribElem = document.getElementById('val-active-contributors');
+        if (contribElem) contribElem.innerText = activeContribCount;
+
+        const compElem = document.getElementById('val-completed-letters');
+        if (compElem) compElem.innerText = `${completedLetters} / ${this.config.LETTERS.length}`;
+
+        const rateElem = document.getElementById('val-completion-rate');
+        if (rateElem) rateElem.innerText = `${percent}%`;
 
         // Progress bar
-        document.getElementById('progress-bar-fill').style.width = ${percent}%;
-        document.getElementById('progress-percent-label').innerText = ${percent}%;
-        document.getElementById('progress-meta-count').innerText = ${totalSamples.toLocaleString()} من أصل  عينة مطلوبة;
+        const barFill = document.getElementById('progress-bar-fill');
+        if (barFill) barFill.style.width = `${percent}%`;
+
+        const percentLabel = document.getElementById('progress-percent-label');
+        if (percentLabel) percentLabel.innerText = `${percent}%`;
+
+        const metaCount = document.getElementById('progress-meta-count');
+        if (metaCount) metaCount.innerText = `${totalSamples.toLocaleString()} من أصل ${targetTotal.toLocaleString()} عينة مطلوبة`;
 
         // Render Sub-components
         this.renderContributorsChart(contribMap);
@@ -232,10 +244,10 @@ class AsharaDashboardEngine {
         }
 
         sorted.forEach(([name, data], idx) => {
-            const medal = idx === 0 ? 🥇  : (idx === 1 ? 🥈  : (idx === 2 ? 🥉  : # ));
+            const medal = idx === 0 ? "🥇 " : (idx === 1 ? "🥈 " : (idx === 2 ? "🥉 " : `#${idx + 1} `));
             const opt = document.createElement('option');
             opt.value = name;
-            opt.innerText = ${medal} ( عينة);
+            opt.innerText = `${medal}${name} (${data.total.toLocaleString()} عينة)`;
             picker.appendChild(opt);
         });
 
@@ -255,186 +267,202 @@ class AsharaDashboardEngine {
     setMemberLetterFilter(mode) {
         this.memberFilterMode = mode;
         document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-        const activeChip = document.querySelector(.filter-chip[data-mode="]);
- if (activeChip) activeChip.classList.add('active');
- if (this.selectedMember) this.renderMemberProfile(this.selectedMember);
- }
+        const activeChip = document.querySelector(`.filter-chip[data-mode="${mode}"]`);
+        if (activeChip) activeChip.classList.add('active');
+        if (this.selectedMember) this.renderMemberProfile(this.selectedMember);
+    }
 
- renderMemberProfile(name) {
- const data = this.contributorsMap[name];
- if (!data) return;
+    renderMemberProfile(name) {
+        const data = this.contributorsMap[name];
+        if (!data) return;
 
- const total = data.total;
- const letters = data.letters;
- const coveredLetters = Object.keys(letters).filter(l => letters[l] > 0).length;
- const pct = ((coveredLetters / this.config.LETTERS.length) * 100).toFixed(1);
+        const total = data.total;
+        const letters = data.letters;
+        const coveredLetters = Object.keys(letters).filter(l => letters[l] > 0).length;
+        const pct = ((coveredLetters / this.config.LETTERS.length) * 100).toFixed(1);
 
- document.getElementById('prof-avatar').innerText = name.charAt(0).toUpperCase();
- document.getElementById('prof-name').innerText = المساهم: ;
- 
- const lastActiveFormatted = data.lastActive ? new Date(data.lastActive).toLocaleString('ar-EG') : '-';
- document.getElementById('prof-last-active').innerText = آخر نشاط: ;
- document.getElementById('prof-samples-cnt').innerText = ${total.toLocaleString()} عينة;
- document.getElementById('prof-letters-cnt').innerText = ${coveredLetters} / حرف;
- document.getElementById('prof-coverage-pct').innerText = ${pct}%;
+        const avatarElem = document.getElementById('prof-avatar');
+        if (avatarElem) avatarElem.innerText = name.charAt(0).toUpperCase();
 
- const container = document.getElementById('member-matrix-grid');
- container.innerHTML = '';
+        const nameElem = document.getElementById('prof-name');
+        if (nameElem) nameElem.innerText = `المساهم: ${name}`;
 
- this.config.LETTERS.forEach(letter => {
- const count = letters[letter] || 0;
+        const lastActiveFormatted = data.lastActive ? new Date(data.lastActive).toLocaleString('ar-EG') : '-';
+        const lastActiveElem = document.getElementById('prof-last-active');
+        if (lastActiveElem) lastActiveElem.innerText = `آخر نشاط: ${lastActiveFormatted}`;
 
- if (this.memberFilterMode === 'done' && count < this.config.TARGET_PER_LETTER) return;
- if (this.memberFilterMode === 'inprogress' && (count === 0 || count >= this.config.TARGET_PER_LETTER)) return;
- if (this.memberFilterMode === 'missing' && count > 0) return;
+        const samplesCnt = document.getElementById('prof-samples-cnt');
+        if (samplesCnt) samplesCnt.innerText = `${total.toLocaleString()} عينة`;
 
- let statusClass = 'status-empty';
- let statusText = 'لم يُسجل ❌';
+        const lettersCnt = document.getElementById('prof-letters-cnt');
+        if (lettersCnt) lettersCnt.innerText = `${coveredLetters} / ${this.config.LETTERS.length} حرف`;
 
- if (count >= this.config.TARGET_PER_LETTER) {
- statusClass = 'status-done';
- statusText = 'مكتمل ✅';
- } else if (count > 0) {
- statusClass = 'status-inprogress';
- statusText = 'قيد الجمع ⏳';
- }
+        const covPct = document.getElementById('prof-coverage-pct');
+        if (covPct) covPct.innerText = `${pct}%`;
 
- const card = document.createElement('div');
- card.className = 'letter-pill';
- card.innerHTML = 
- <div class=letter-char></div>
- <div class=letter-samples> عينة</div>
- <div class=letter-status-tag ></div>
- ;
- container.appendChild(card);
- });
+        const container = document.getElementById('member-matrix-grid');
+        if (!container) return;
+        container.innerHTML = '';
 
- if (container.children.length === 0) {
- container.innerHTML = <div style=grid-column: 1/-1; text-align: center; color: #94a3b8; padding: 20px;>لا توجد حروف تطابق هذا الفلتر لهذا العضو.</div>;
- }
- }
+        this.config.LETTERS.forEach(letter => {
+            const count = letters[letter] || 0;
 
- renderMatrixSection(letterMap) {
- const container = document.getElementById('matrix-grid');
- if (!container) return;
+            if (this.memberFilterMode === 'done' && count < this.config.TARGET_PER_LETTER) return;
+            if (this.memberFilterMode === 'inprogress' && (count === 0 || count >= this.config.TARGET_PER_LETTER)) return;
+            if (this.memberFilterMode === 'missing' && count > 0) return;
 
- container.innerHTML = '';
- this.config.LETTERS.forEach(letter => {
- const info = letterMap[letter] || { count: 0, contributors: new Set() };
- const count = info.count;
- const target = this.config.TARGET_PER_LETTER;
- const pct = Math.min(100, Math.round((count / target) * 100));
+            let statusClass = 'status-empty';
+            let statusText = 'لم يُسجل ❌';
 
- let statusClass = 'status-empty';
- let statusLabel = '0%';
- if (count >= target) {
- statusClass = 'status-done';
- statusLabel = '100% مكتمل';
- } else if (count > 0) {
- statusClass = 'status-inprogress';
- statusLabel = ${pct}%;
- }
+            if (count >= this.config.TARGET_PER_LETTER) {
+                statusClass = 'status-done';
+                statusText = 'مكتمل ✅';
+            } else if (count > 0) {
+                statusClass = 'status-inprogress';
+                statusText = 'قيد الجمع ⏳';
+            }
 
- const card = document.createElement('div');
- card.className = 'matrix-card';
- card.innerHTML = 
- <div class=matrix-card-char></div>
- <div class=matrix-card-name></div>
- <div class=letter-samples style=font-weight: 700; color: #fff;> عينة</div>
- <div class=letter-status-tag  style=margin-top: 6px;></div>
- ;
- container.appendChild(card);
- });
- }
+            const card = document.createElement('div');
+            card.className = 'letter-pill';
+            card.innerHTML = `
+                <div class="letter-char">${letter}</div>
+                <div class="letter-samples">${count} عينة</div>
+                <div class="letter-status-tag ${statusClass}">${statusText}</div>
+            `;
+            container.appendChild(card);
+        });
 
- renderActivityTable(rows) {
- const tbody = document.getElementById('activity-table-body');
- if (!tbody) return;
+        if (container.children.length === 0) {
+            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #94a3b8; padding: 20px;">لا توجد حروف تطابق هذا الفلتر لهذا العضو.</div>`;
+        }
+    }
 
- tbody.innerHTML = '';
- const latest = rows.slice(0, 100);
+    renderMatrixSection(letterMap) {
+        const container = document.getElementById('matrix-grid');
+        if (!container) return;
 
- latest.forEach(r => {
- const tr = document.createElement('tr');
- const dateStr = r.created_at ? new Date(r.created_at).toLocaleString('ar-EG') : '-';
- const letter = r.letter || '-';
- const letterName = this.config.LETTER_NAMES[letter] || letter;
+        container.innerHTML = '';
+        this.config.LETTERS.forEach(letter => {
+            const info = letterMap[letter] || { count: 0, contributors: new Set() };
+            const count = info.count;
+            const target = this.config.TARGET_PER_LETTER;
+            const pct = Math.min(100, Math.round((count / target) * 100));
 
- tr.innerHTML = 
- <td><span class=badge-contributor><i class=fa-solid fa-user></i> </span></td>
- <td><span class=badge-letter></span> <span style=font-size: 0.8rem; color: #94a3b8;>()</span></td>
- <td style=font-weight: 700;>+ عينة</td>
- <td style=color: #94a3b8; font-size: 0.82rem;></td>
- ;
- tbody.appendChild(tr);
- });
- }
+            let statusClass = 'status-empty';
+            let statusLabel = '0%';
+            if (count >= target) {
+                statusClass = 'status-done';
+                statusLabel = '100% مكتمل';
+            } else if (count > 0) {
+                statusClass = 'status-inprogress';
+                statusLabel = `${pct}%`;
+            }
 
- _setupRealtime() {
- this.db.subscribeToNewSamples((newRecord) => {
- this.audio.playSuccessChime();
- this.showToast(📥 عينة جديدة رفعت الآن من: لحرف [] 🎉);
- this.cachedRows.unshift(newRecord);
- this.renderDashboard(this.cachedRows);
- });
- }
+            const card = document.createElement('div');
+            card.className = 'matrix-card';
+            card.innerHTML = `
+                <div class="matrix-card-char">${letter}</div>
+                <div class="matrix-card-name">${this.config.LETTER_NAMES[letter] || ''}</div>
+                <div class="letter-samples" style="font-weight: 700; color: #fff;">${count.toLocaleString()} عينة</div>
+                <div class="letter-status-tag ${statusClass}" style="margin-top: 6px;">${statusLabel}</div>
+            `;
+            container.appendChild(card);
+        });
+    }
 
- async _loadAppUpdates() {
- const update = await this.db.fetchAppUpdates();
- if (update) {
- const banner = document.getElementById('updates-banner');
- if (banner) {
- banner.style.display = 'flex';
- document.getElementById('updates-version-text').innerText = برنامج SignCollector v متوفر للتحميل;
- if (update.release_notes) {
- document.getElementById('updates-notes').innerText = update.release_notes;
- }
- if (update.download_url) {
- document.getElementById('updates-dl-btn').href = update.download_url;
- }
- }
- }
- }
+    renderActivityTable(rows) {
+        const tbody = document.getElementById('activity-table-body');
+        if (!tbody) return;
 
- exportCSV() {
- if (!this.cachedRows || this.cachedRows.length === 0) {
- alert('لا توجد بيانات متاحة للتصدير حالياً.');
- return;
- }
+        tbody.innerHTML = '';
+        const latest = rows.slice(0, 100);
 
- let csv = '\uFEFF'; // UTF-8 BOM
- csv += 'ID,المساهم,الحرف,عدد العينات,تاريخ التسجيل\n';
+        latest.forEach(r => {
+            const tr = document.createElement('tr');
+            const dateStr = r.created_at ? new Date(r.created_at).toLocaleString('ar-EG') : '-';
+            const letter = r.letter || '-';
+            const letterName = this.config.LETTER_NAMES[letter] || letter;
 
- this.cachedRows.forEach(r => {
- csv += ,,,,\n;
- });
+            tr.innerHTML = `
+                <td><span class="badge-contributor"><i class="fa-solid fa-user"></i> ${r.contributor || 'anonymous'}</span></td>
+                <td><span class="badge-letter">${letter}</span> <span style="font-size: 0.8rem; color: #94a3b8;">(${letterName})</span></td>
+                <td style="font-weight: 700;">+${(r.sample_count || 50)} عينة</td>
+                <td style="color: #94a3b8; font-size: 0.82rem;">${dateStr}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
 
- const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
- const url = URL.createObjectURL(blob);
- const a = document.createElement('a');
- a.href = url;
- a.download = shara_samples_report_.csv;
- document.body.appendChild(a);
- a.click();
- document.body.removeChild(a);
- URL.revokeObjectURL(url);
- }
+    _setupRealtime() {
+        this.db.subscribeToNewSamples((newRecord) => {
+            this.audio.playSuccessChime();
+            this.showToast(`📥 عينة جديدة رفعت الآن من: ${newRecord.contributor} لحرف [${newRecord.letter}] 🎉`);
+            this.cachedRows.unshift(newRecord);
+            this.renderDashboard(this.cachedRows);
+        });
+    }
 
- showToast(message) {
- let toast = document.getElementById('realtime-toast');
- if (!toast) {
- toast = document.createElement('div');
- toast.id = 'realtime-toast';
- document.body.appendChild(toast);
- }
- toast.innerHTML = <i class=fa-solid fa-bell></i> ;
- toast.classList.add('show');
- setTimeout(() => toast.classList.remove('show'), 4000);
- }
+    async _loadAppUpdates() {
+        const update = await this.db.fetchAppUpdates();
+        if (update) {
+            const banner = document.getElementById('updates-banner');
+            if (banner) {
+                banner.style.display = 'flex';
+                const versionElem = document.getElementById('updates-version-text');
+                if (versionElem) versionElem.innerText = `برنامج SignCollector v${update.version} متوفر للتحميل`;
+
+                const notesElem = document.getElementById('updates-notes');
+                if (notesElem && update.release_notes) {
+                    notesElem.innerText = update.release_notes;
+                }
+
+                const dlBtn = document.getElementById('updates-dl-btn');
+                if (dlBtn && update.download_url) {
+                    dlBtn.href = update.download_url;
+                }
+            }
+        }
+    }
+
+    exportCSV() {
+        if (!this.cachedRows || this.cachedRows.length === 0) {
+            alert('لا توجد بيانات متاحة للتصدير حالياً.');
+            return;
+        }
+
+        let csv = '\uFEFF'; // UTF-8 BOM
+        csv += 'ID,المساهم,الحرف,عدد العينات,تاريخ التسجيل\n';
+
+        this.cachedRows.forEach(r => {
+            csv += `"${r.id || ''}","${r.contributor || ''}","${r.letter || ''}",${r.sample_count || 50},"${r.created_at || ''}"\n`;
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ashara_samples_report_${new Date().toISOString().slice(0, 10)}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    showToast(message) {
+        let toast = document.getElementById('realtime-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'realtime-toast';
+            document.body.appendChild(toast);
+        }
+        toast.innerHTML = `<i class="fa-solid fa-bell"></i> ${message}`;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 4000);
+    }
 }
 
 // Auto-boot on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
- window.dashboardApp = new AsharaDashboardEngine();
- window.dashboardApp.init();
+    window.dashboardApp = new AsharaDashboardEngine();
+    window.dashboardApp.init();
 });
