@@ -10,7 +10,7 @@ class AsharaCollectorEngine {
         this.audio = window.AsharaAudio;
 
         this.currentLetterIndex = 0;
-        this.contributor = localStorage.getItem('ashara_contributor_name') || 'عضو_المشروع';
+        this.contributor = (localStorage.getItem('ashara_contributor_name') || '').trim();
 
         // MediaPipe & Camera state
         this.camera = null;
@@ -19,7 +19,6 @@ class AsharaCollectorEngine {
         this.videoElement = null;
         this.canvasElement = null;
         this.canvasCtx = null;
-        this.selectedCameraId = null;
 
         // Recording State
         this.isCountingDown = false;
@@ -32,7 +31,8 @@ class AsharaCollectorEngine {
         this.isHandStable = false;
 
         // Contributor local counts
-        this.contributorCounts = JSON.parse(localStorage.getItem('ashara_local_counts_' + this.contributor) || '{}');
+        this.contributorCounts = {};
+        this.config.LETTERS.forEach(l => this.contributorCounts[l] = 0);
     }
 
     async init() {
@@ -46,9 +46,17 @@ class AsharaCollectorEngine {
         this._setupKeyboardShortcuts();
         this._renderLettersBar();
         this.setLetter(0);
-        this._updateContributorStats();
-        this._checkOfflineQueue();
 
+        // Check if contributor name is set, otherwise prompt immediately
+        if (!this.contributor) {
+            this.showNamePromptModal();
+        } else {
+            const nameInput = document.getElementById('contributor-name-input');
+            if (nameInput) nameInput.value = this.contributor;
+            await this.loadContributorData(this.contributor);
+        }
+
+        this._checkOfflineQueue();
         await this._initMediaPipe();
         await this.startCamera();
     }
@@ -56,13 +64,50 @@ class AsharaCollectorEngine {
     _setupDOMListeners() {
         const nameInput = document.getElementById('contributor-name-input');
         if (nameInput) {
-            nameInput.value = this.contributor;
-            nameInput.addEventListener('change', (e) => {
-                this.contributor = e.target.value.trim() || 'عضو_المشروع';
-                localStorage.setItem('ashara_contributor_name', this.contributor);
-                this.contributorCounts = JSON.parse(localStorage.getItem('ashara_local_counts_' + this.contributor) || '{}');
-                this._updateContributorStats();
-                this._renderLettersBar();
+            nameInput.addEventListener('input', (e) => {
+                const val = e.target.value.trim();
+                nameInput.classList.remove('error');
+                if (val) {
+                    this.contributor = val;
+                    localStorage.setItem('ashara_contributor_name', val);
+                    this.loadContributorData(val);
+                } else {
+                    this.contributor = '';
+                    localStorage.removeItem('ashara_contributor_name');
+                    this._updateContributorStats();
+                }
+            });
+        }
+
+        // Modal Name Prompt Listeners
+        const modalBtn = document.getElementById('btn-save-modal-name');
+        const modalInput = document.getElementById('modal-name-input');
+        const modalErr = document.getElementById('modal-name-error');
+
+        if (modalBtn && modalInput) {
+            modalBtn.addEventListener('click', () => {
+                const val = modalInput.value.trim();
+                if (!val) {
+                    if (modalErr) modalErr.style.display = 'block';
+                    modalInput.focus();
+                    return;
+                }
+                this.contributor = val;
+                localStorage.setItem('ashara_contributor_name', val);
+                if (nameInput) nameInput.value = val;
+                this.hideNamePromptModal();
+                this.loadContributorData(val);
+                this.showToast(`أهلاً بك يا ${val}! يمكنك الآن بدء تسجيل العينات 🎉`);
+            });
+
+            modalInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    modalBtn.click();
+                }
+            });
+
+            modalInput.addEventListener('input', () => {
+                if (modalErr) modalErr.style.display = 'none';
             });
         }
 
@@ -101,6 +146,23 @@ class AsharaCollectorEngine {
         }
     }
 
+    showNamePromptModal() {
+        const modal = document.getElementById('contributor-name-modal');
+        const input = document.getElementById('modal-name-input');
+        if (modal) {
+            modal.classList.add('show');
+            if (input) {
+                input.value = this.contributor || '';
+                setTimeout(() => input.focus(), 200);
+            }
+        }
+    }
+
+    hideNamePromptModal() {
+        const modal = document.getElementById('contributor-name-modal');
+        if (modal) modal.classList.remove('show');
+    }
+
     _updateSoundButtonUI(btn) {
         if (this.audio.isMuted()) {
             btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> الصوت مكتوم';
@@ -115,7 +177,6 @@ class AsharaCollectorEngine {
 
     _setupKeyboardShortcuts() {
         window.addEventListener('keydown', (e) => {
-            // Ignore if active in text input
             if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
 
             if (e.code === 'Space') {
@@ -127,6 +188,72 @@ class AsharaCollectorEngine {
                 this.prevLetter();
             }
         });
+    }
+
+    /**
+     * جلب سجل العينات التاريخية لهذا المساهم من Supabase لحساب الحروف المكتملة بدقة
+     */
+    async loadContributorData(contributorName) {
+        if (!contributorName || !contributorName.trim()) {
+            this.contributorCounts = {};
+            this.config.LETTERS.forEach(l => this.contributorCounts[l] = 0);
+            this._updateContributorStats();
+            this._renderLettersBar();
+            this._updateLetterCardUI();
+            return;
+        }
+
+        const name = contributorName.trim();
+        const counts = {};
+        this.config.LETTERS.forEach(l => counts[l] = 0);
+
+        try {
+            const url = `${this.config.SUPABASE_URL}/rest/v1/letter_samples?select=letter,sample_count&contributor=eq.${encodeURIComponent(name)}`;
+            const headers = {
+                "apikey": this.config.SUPABASE_KEY,
+                "Authorization": `Bearer ${this.config.SUPABASE_KEY}`
+            };
+
+            const res = await fetch(url, { headers });
+            if (res.ok) {
+                const rows = await res.json();
+                rows.forEach(r => {
+                    const l = (r.letter || '').trim();
+                    const c = parseInt(r.sample_count || 50, 10);
+                    if (counts[l] !== undefined) {
+                        counts[l] += c;
+                    } else {
+                        counts[l] = c;
+                    }
+                });
+            }
+        } catch (e) {
+            console.warn("Could not query contributor stats from Supabase:", e);
+            // Fallback to local cache if offline
+            const localCache = JSON.parse(localStorage.getItem('ashara_local_counts_' + name) || '{}');
+            Object.keys(localCache).forEach(k => counts[k] = (counts[k] || 0) + localCache[k]);
+        }
+
+        // Include any unsynced offline queue items for this user
+        const queue = this.db.getPendingQueue();
+        queue.forEach(item => {
+            if (item.contributor === name) {
+                const l = (item.letter || '').trim();
+                const c = parseInt(item.sample_count || 50, 10);
+                if (counts[l] !== undefined) {
+                    counts[l] += c;
+                } else {
+                    counts[l] = c;
+                }
+            }
+        });
+
+        this.contributorCounts = counts;
+        localStorage.setItem('ashara_local_counts_' + name, JSON.stringify(counts));
+
+        this._updateContributorStats();
+        this._renderLettersBar();
+        this._updateLetterCardUI();
     }
 
     async _initMediaPipe() {
@@ -175,9 +302,6 @@ class AsharaCollectorEngine {
         }
     }
 
-    /**
-     * معالجة نتائج فحص اليد من MediaPipe
-     */
     _onHandResults(results) {
         if (!this.canvasCtx || !this.canvasElement) return;
 
@@ -189,7 +313,6 @@ class AsharaCollectorEngine {
 
         const hasHands = results.multiHandLandmarks && results.multiHandLandmarks.length > 0;
 
-        // فحص عدد الأيدي وتحديث الـ HUD
         const handHud = document.getElementById('hud-hands-count');
         const stabilityHud = document.getElementById('hud-hand-stability');
 
@@ -199,14 +322,12 @@ class AsharaCollectorEngine {
             const handLabel = count === 1 ? (handedness === 'Left' ? 'اليد اليسرى' : 'اليد اليمنى') : 'اليدين معاً';
             if (handHud) handHud.innerHTML = `<i class="fa-solid fa-hand"></i> ${handLabel} مكتشفة`;
 
-            // Draw skeleton & landmarks
             for (let i = 0; i < results.multiHandLandmarks.length; i++) {
                 const landmarks = results.multiHandLandmarks[i];
                 const isLeft = results.multiHandedness[i]?.label === 'Left';
                 this._drawCustomHandSkeleton(landmarks, w, h, isLeft);
             }
 
-            // فحص الاستقرار عبر إحداثيات المعصم (Landmark 0)
             const wrist = results.multiHandLandmarks[0][0];
             this._checkHandStability(wrist);
 
@@ -220,7 +341,6 @@ class AsharaCollectorEngine {
                 }
             }
 
-            // إذا كان التسجيل نشطاً، نستخرج الـ 126 نقطة
             if (this.isRecording) {
                 const sample126 = this._extract126Landmarks(results);
                 this.currentRoundSamples.push(sample126);
@@ -243,9 +363,6 @@ class AsharaCollectorEngine {
         this.canvasCtx.restore();
     }
 
-    /**
-     * استخراج الـ 126 نقطة (63 لليسار + 63 لليمين) بنفس تركيبة collector.py
-     */
     _extract126Landmarks(results) {
         const left = new Array(63).fill(0.0);
         const right = new Array(63).fill(0.0);
@@ -271,15 +388,11 @@ class AsharaCollectorEngine {
         return left.concat(right);
     }
 
-    /**
-     * رسم عظام ونقاط اليد بألوان عصرية وتأثير نيون
-     */
     _drawCustomHandSkeleton(landmarks, w, h, isLeft) {
         const ctx = this.canvasCtx;
         const colorMain = isLeft ? '#06b6d4' : '#10b981';
         const colorPoint = '#ffffff';
 
-        // Connective hand bones (MediaPipe Hands connections)
         const connections = [
             [0, 1], [1, 2], [2, 3], [3, 4],       // Thumb
             [0, 5], [5, 6], [6, 7], [7, 8],       // Index
@@ -289,7 +402,6 @@ class AsharaCollectorEngine {
             [0, 17]                               // Palm base
         ];
 
-        // Draw bone lines
         ctx.strokeStyle = colorMain;
         ctx.lineWidth = 3;
         ctx.lineCap = 'round';
@@ -305,7 +417,6 @@ class AsharaCollectorEngine {
             ctx.stroke();
         }
 
-        // Draw landmark nodes
         ctx.shadowBlur = 4;
         for (let i = 0; i < landmarks.length; i++) {
             const pt = landmarks[i];
@@ -328,7 +439,6 @@ class AsharaCollectorEngine {
             return;
         }
 
-        // حساب التباين في الحركة
         let totalDist = 0;
         for (let i = 1; i < this.recentWristPositions.length; i++) {
             const dx = this.recentWristPositions[i].x - this.recentWristPositions[i - 1].x;
@@ -342,6 +452,18 @@ class AsharaCollectorEngine {
 
     toggleRecord() {
         if (this.isCountingDown) return;
+
+        // التحقق الإجباري من إدخال اسم المساهم
+        if (!this.contributor || !this.contributor.trim()) {
+            this.showNamePromptModal();
+            this.showToast('⚠️ يرجى كتابة اسم المساهم أولاً لحفظ العينات باسمك!');
+            const topInput = document.getElementById('contributor-name-input');
+            if (topInput) {
+                topInput.classList.add('error');
+                topInput.focus();
+            }
+            return;
+        }
 
         if (this.isRecording) {
             this.isRecording = false;
@@ -431,11 +553,12 @@ class AsharaCollectorEngine {
             btn.className = 'btn btn-emerald btn-lg record-btn-main';
         }
 
-        // Update local contributor counts
+        // Update local contributor counts immediately
         const currentCount = this.contributorCounts[letter] || 0;
         this.contributorCounts[letter] = currentCount + samplesToUpload.length;
         localStorage.setItem('ashara_local_counts_' + this.contributor, JSON.stringify(this.contributorCounts));
 
+        // Recompute and update UI
         this._updateContributorStats();
         this._renderLettersBar();
         this._updateLetterCardUI();
@@ -540,14 +663,18 @@ class AsharaCollectorEngine {
         this.config.LETTERS.forEach(l => {
             const c = this.contributorCounts[l] || 0;
             total += c;
-            if (c >= this.config.TARGET_PER_LETTER) completedLetters++;
+            if (c >= this.config.TARGET_PER_LETTER) {
+                completedLetters++;
+            }
         });
 
         const totalElem = document.getElementById('contributor-total-samples');
         if (totalElem) totalElem.innerText = `${total.toLocaleString()} عينة`;
 
         const completedElem = document.getElementById('contributor-completed-letters');
-        if (completedElem) completedElem.innerText = `${completedLetters} / 31 حرف`;
+        if (completedElem) {
+            completedElem.innerHTML = `<span dir="ltr">${completedLetters} / 31</span> حرف مكتمل`;
+        }
     }
 
     _checkOfflineQueue() {

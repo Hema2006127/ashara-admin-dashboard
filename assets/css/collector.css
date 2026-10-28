@@ -10,12 +10,6 @@
     align-items: start;
 }
 
-@media (max-width: 1100px) {
-    .collector-wrapper {
-        grid-template-columns: 1fr;
-    }
-}
-
 /* Contributor Top Bar Card */
 .contributor-bar {
     background: var(--surface);
@@ -59,6 +53,18 @@
 .contributor-input:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.contributor-input.error {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.35);
+    animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
 }
 
 /* Left Column: Letter Reference Card */
@@ -184,7 +190,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transform: scaleX(-1); /* مرآة أفقية لتسهيل الإشارات */
+    transform: scaleX(-1);
     display: block;
 }
 
@@ -194,7 +200,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    transform: scaleX(-1); /* مطابق للفيديو */
+    transform: scaleX(-1);
     pointer-events: none;
 }
 
@@ -212,7 +218,7 @@
 }
 
 .hud-badge {
-    background: rgba(11, 15, 25, 0.85);
+    background: rgba(11, 15, 25, 0.88);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     padding: 6px 14px;
@@ -243,7 +249,7 @@
 .countdown-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(4px);
     display: flex;
     flex-direction: column;
@@ -261,7 +267,7 @@
 }
 
 .countdown-number {
-    font-size: 6rem;
+    font-size: 5.5rem;
     font-weight: 900;
     font-family: 'Cairo', sans-serif;
     color: #fff;
@@ -276,7 +282,7 @@
 }
 
 .countdown-label {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: var(--text-muted);
     margin-top: 10px;
@@ -420,4 +426,171 @@
 
 .offline-sync-card.show {
     display: flex;
+}
+
+/* Mandatory Name Modal Backdrop & Card */
+.name-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.name-modal-backdrop.show {
+    display: flex;
+}
+
+.name-modal-card {
+    background: #131825;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--radius-xl);
+    padding: 30px 24px;
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPop {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.name-modal-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: #fff;
+    margin: 0 auto 16px;
+    box-shadow: 0 8px 24px var(--accent-glow);
+}
+
+/* ==========================================================================
+   MOBILE & TABLET RESPONSIVENESS FIXES (حل مشاكل التداخل لشاشات الهواتف)
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .collector-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* إلغاء sticky لمنع التداخل نهائياً مع الكاميرا */
+    .letter-guide-card {
+        position: relative !important;
+        top: auto !important;
+        padding: 20px;
+        order: 2; /* جعل الدليل أسفل الكاميرا لتسهيل التصوير */
+    }
+
+    .camera-studio-card {
+        order: 1; /* الكاميرا وأزرار التحكم أولاً */
+        padding: 16px;
+    }
+
+    .letters-quick-bar {
+        order: 3;
+        padding: 16px;
+        margin-top: 0;
+    }
+
+    .guide-image-container {
+        height: 190px;
+    }
+}
+
+@media (max-width: 768px) {
+    .contributor-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        padding: 16px;
+    }
+
+    .contributor-input-group {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+
+    .contributor-input {
+        width: 100%;
+        font-size: 1rem;
+        padding: 10px 14px;
+    }
+
+    .viewport-container {
+        max-height: 380px;
+        aspect-ratio: 4 / 3;
+    }
+
+    /* ترتيب وبساطة شارات الـ HUD على الهاتف لمنع تغطية اليد */
+    .camera-hud-top {
+        top: 8px;
+        left: 8px;
+        right: 8px;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .hud-badge {
+        padding: 4px 10px;
+        font-size: 0.72rem;
+        border-radius: 12px;
+        gap: 4px;
+    }
+
+    /* أزرار التحكم في الهاتف */
+    .collector-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 14px;
+    }
+
+    .record-btn-main {
+        width: 100%;
+        padding: 16px;
+        font-size: 1.15rem;
+        order: 1;
+    }
+
+    .controls-group {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        order: 2;
+    }
+
+    .controls-group .btn {
+        flex: 1;
+        padding: 12px;
+        font-size: 0.88rem;
+    }
+
+    .controls-group:last-child {
+        display: none; /* إخفاء دليل أزرار الكيبورد على شاشات اللمس */
+    }
+
+    .countdown-number {
+        font-size: 4.5rem;
+    }
+
+    .countdown-label {
+        font-size: 1rem;
+    }
 }

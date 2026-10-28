@@ -1,223 +1,252 @@
 <!DOCTYPE html>
-<html lang=ar dir=rtl>
+<html lang="ar" dir="rtl">
 
 <head>
-    <meta charset=UTF-8>
-    <meta name=viewport content=width=device-width, initial-scale=1.0>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>جامع عينات لغة الإشارة — مشروع إشارة (Ashara Sign Collector Web)</title>
 
     <!-- Icons & Fonts -->
-    <link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Modular Stylesheets -->
-    <link rel=stylesheet href=assets/css/common.css>
-    <link rel=stylesheet href=assets/css/collector.css>
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/collector.css">
 
     <!-- MediaPipe Hands & Camera Utils -->
-    <script src=https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js crossorigin=anonymous></script>
-    <script src=https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js crossorigin=anonymous></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 
     <!-- Supabase Client -->
-    <script src=https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
-    <div class=app-container>
+    <div class="app-container">
         <!-- Sidebar Navigation -->
-        <aside class=sidebar>
-            <a href=index.html class=brand>
-                <div class=brand-icon>
-                    <i class=fa-solid fa-hands-asl-interpreting></i>
+        <aside class="sidebar">
+            <a href="index.html" class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-hands-asl-interpreting"></i>
                 </div>
                 <div>
-                    <div class=brand-title>اشاره • Ashara</div>
-                    <div class=brand-sub>استوديو جمع الإشارات أونلاين</div>
+                    <div class="brand-title">اشاره • Ashara</div>
+                    <div class="brand-sub">استوديو جمع الإشارات أونلاين</div>
                 </div>
             </a>
 
-            <ul class=nav-list>
-                <li class=nav-item>
-                    <a href=index.html><i class=fa-solid fa-chart-pie></i> العودة للوحة التحكم والتحليلات</a>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="index.html"><i class="fa-solid fa-chart-pie"></i> العودة للوحة التحكم والتحليلات</a>
                 </li>
-                <li class=nav-item special active>
-                    <a href=collector.html><i class=fa-solid fa-camera></i> استوديو الجمع المباشر</a>
+                <li class="nav-item special active">
+                    <a href="collector.html"><i class="fa-solid fa-camera"></i> استوديو الجمع المباشر</a>
                 </li>
             </ul>
 
-            <div class=sidebar-footer>
-                <p><i class=fa-solid fa-satellite-dish></i> تتبع ذكي بـ MediaPipe</p>
-                <p style=margin-top: 4px; font-size: 0.75rem;>126 نقطة إحداثية لكل عينة</p>
+            <div class="sidebar-footer">
+                <p><i class="fa-solid fa-satellite-dish"></i> تتبع ذكي بـ MediaPipe</p>
+                <p style="margin-top: 4px; font-size: 0.75rem;">126 نقطة إحداثية لكل عينة</p>
             </div>
         </aside>
 
         <!-- Main Studio Area -->
-        <main class=main-wrapper>
+        <main class="main-wrapper">
             <!-- Top Contributor & Controls Bar -->
-            <div class=contributor-bar>
-                <div class=contributor-input-group>
-                    <label for=contributor-name-input><i class=fa-solid fa-user-tag></i> اسم المساهم:</label>
-                    <input type=text id=contributor-name-input class=contributor-input placeholder=اكتب اسمك هنا...>
+            <div class="contributor-bar">
+                <div class="contributor-input-group">
+                    <label for="contributor-name-input">
+                        <i class="fa-solid fa-user-tag"></i> اسم المساهم <span style="color: #ef4444;">*</span>:
+                    </label>
+                    <input type="text" id="contributor-name-input" class="contributor-input" placeholder="اكتب اسمك للمتابعة..." autocomplete="name">
                 </div>
 
-                <div style=display: flex; align-items: center; gap: 16px; flex-wrap: wrap;>
-                    <div style=font-size: 0.88rem; color: var(--text-muted);>
-                        مجموع عيناتك: <strong id=contributor-total-samples style=color: #38bdf8; font-size: 1.05rem;>0</strong>
+                <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                    <div style="font-size: 0.88rem; color: var(--text-muted);">
+                        مجموع عيناتك: <strong id="contributor-total-samples" style="color: #38bdf8; font-size: 1.05rem;">0</strong>
                     </div>
-                    <div style=font-size: 0.88rem; color: var(--text-muted);>
-                        الحروف المكتملة لك: <strong id=contributor-completed-letters style=color: #34d399; font-size: 1.05rem;>0 / 31</strong>
+                    <div style="font-size: 0.88rem; color: var(--text-muted);">
+                        الحروف المكتملة لك: <strong id="contributor-completed-letters" style="color: #34d399; font-size: 1.05rem;"><span dir="ltr">0 / 31</span> حرف مكتمل</strong>
                     </div>
-                    <button id=btn-toggle-sound class=btn btn-outline style=padding: 6px 14px; font-size: 0.82rem;>
-                        <i class=fa-solid fa-volume-high></i> المؤثرات مفعلة
+                    <button id="btn-toggle-sound" class="btn btn-outline" style="padding: 6px 14px; font-size: 0.82rem;">
+                        <i class="fa-solid fa-volume-high"></i> المؤثرات مفعلة
                     </button>
-                    <a href=index.html class=btn btn-outline style=padding: 6px 14px; font-size: 0.82rem;>
-                        <i class=fa-solid fa-chart-pie></i> لوحة الإحصائيات
+                    <a href="index.html" class="btn btn-outline" style="padding: 6px 14px; font-size: 0.82rem;">
+                        <i class="fa-solid fa-chart-pie"></i> لوحة الإحصائيات
                     </a>
                 </div>
             </div>
 
             <!-- Offline Synchronisation Alert Banner -->
-            <div id=offline-sync-card class=offline-sync-card>
-                <div style=display: flex; align-items: center; gap: 10px;>
-                    <i class=fa-solid fa-cloud-arrow-up style=font-size: 1.3rem; color: var(--amber);></i>
+            <div id="offline-sync-card" class="offline-sync-card">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.3rem; color: var(--amber);"></i>
                     <div>
                         <strong>تنبيه مزامنة بدون إنترنت:</strong>
-                        <span style=font-size: 0.85rem; color: var(--text-muted); margin-right: 6px;>
-                            يوجد <span id=offline-pending-count style=font-weight: 800; color: #fff;>0</span> جولة محفوظة محلياً لم ترفع بعد.
+                        <span style="font-size: 0.85rem; color: var(--text-muted); margin-right: 6px;">
+                            يوجد <span id="offline-pending-count" style="font-weight: 800; color: #fff;">0</span> جولة محفوظة محلياً لم ترفع بعد.
                         </span>
                     </div>
                 </div>
-                <div style=display: flex; gap: 8px;>
-                    <button id=btn-sync-offline class=btn btn-emerald style=padding: 6px 14px; font-size: 0.82rem;>
-                        <i class=fa-solid fa-rotate></i> مزامنة السحاب الآن
+                <div style="display: flex; gap: 8px;">
+                    <button id="btn-sync-offline" class="btn btn-emerald" style="padding: 6px 14px; font-size: 0.82rem;">
+                        <i class="fa-solid fa-rotate"></i> مزامنة السحاب الآن
                     </button>
-                    <button id=btn-export-offline class=btn btn-outline style=padding: 6px 14px; font-size: 0.82rem;>
-                        <i class=fa-solid fa-download></i> تصدير JSON
+                    <button id="btn-export-offline" class="btn btn-outline" style="padding: 6px 14px; font-size: 0.82rem;">
+                        <i class="fa-solid fa-download"></i> تصدير JSON
                     </button>
                 </div>
             </div>
 
             <!-- Studio Main Split Layout -->
-            <div class=collector-wrapper>
+            <div class="collector-wrapper">
                 <!-- Left Column: Approved Sign Reference Card -->
-                <aside class=letter-guide-card>
-                    <div class=guide-header>
-                        <h2 class=guide-letter-title id=guide-char-name>حرف الألف ( أ / ا )</h2>
-                        <span class=guide-badge status-empty id=guide-status-tag>لم يبدأ ❌</span>
+                <aside class="letter-guide-card">
+                    <div class="guide-header">
+                        <h2 class="guide-letter-title" id="guide-char-name">حرف الألف ( أ / ا )</h2>
+                        <span class="guide-badge status-empty" id="guide-status-tag">لم يبدأ ❌</span>
                     </div>
 
                     <!-- Reference Hand Image -->
-                    <div class=guide-image-container>
-                        <img id=guide-reference-img class=guide-image src=assets/images/letters/0.png alt=صورة الإشارة المرجعية>
-                        <div class=guide-letter-overlay id=guide-char-overlay>ا</div>
+                    <div class="guide-image-container">
+                        <img id="guide-reference-img" class="guide-image" src="assets/images/letters/0.png" alt="صورة الإشارة المرجعية">
+                        <div class="guide-letter-overlay" id="guide-char-overlay">ا</div>
                     </div>
 
                     <!-- Specs & Hints -->
-                    <div class=guide-specs>
-                        <div class=spec-item>
-                            <div class=spec-title><i class=fa-solid fa-compass></i> زاوية وموضع الكف:</div>
-                            <div class=spec-val id=guide-angle-text>مواجهة أمامية مباشرة (0°)</div>
+                    <div class="guide-specs">
+                        <div class="spec-item">
+                            <div class="spec-title"><i class="fa-solid fa-compass"></i> زاوية وموضع الكف:</div>
+                            <div class="spec-val" id="guide-angle-text">مواجهة أمامية مباشرة (0°)</div>
                         </div>
 
-                        <div class=spec-item>
-                            <div class=spec-title><i class=fa-solid fa-lightbulb></i> توجيه الأصابع وحركة اليد:</div>
-                            <div class=spec-val id=guide-hint-text>إبهام مرفوع للأعلى وباقي الأصابع مضمومة</div>
+                        <div class="spec-item">
+                            <div class="spec-title"><i class="fa-solid fa-lightbulb"></i> توجيه الأصابع وحركة اليد:</div>
+                            <div class="spec-val" id="guide-hint-text">إبهام مرفوع للأعلى وباقي الأصابع مضمومة</div>
                         </div>
                     </div>
 
                     <!-- Current Letter Progress -->
-                    <div class=guide-progress-box>
-                        <div style=display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px;>
+                    <div class="guide-progress-box">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px;">
                             <span>عيناتك المسجلة لهذا الحرف:</span>
-                            <strong id=guide-samples-progress style=color: #38bdf8;>0 / 100 عينة</strong>
+                            <strong id="guide-samples-progress" style="color: #38bdf8;">0 / 100 عينة</strong>
                         </div>
-                        <div class=progress-bar-container style=height: 8px;>
-                            <div id=guide-progress-bar class=progress-bar-fill style=width: 0%;></div>
+                        <div class="progress-bar-container" style="height: 8px;">
+                            <div id="guide-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
                         </div>
                     </div>
                 </aside>
 
                 <!-- Right Column: Camera Viewport & HUD -->
-                <section class=camera-studio-card>
-                    <div class=viewport-container>
+                <section class="camera-studio-card">
+                    <div class="viewport-container">
                         <!-- Webcam Feed -->
-                        <video id=webcam-feed class=camera-video playsinline autoplay muted></video>
+                        <video id="webcam-feed" class="camera-video" playsinline autoplay muted></video>
 
                         <!-- Landmarks Canvas Overlay -->
-                        <canvas id=landmark-canvas class=landmark-canvas></canvas>
+                        <canvas id="landmark-canvas" class="landmark-canvas"></canvas>
 
                         <!-- HUD Badges Top -->
-                        <div class=camera-hud-top>
-                            <div id=hud-camera-status class=hud-badge>
-                                <i class=fa-solid fa-video></i> جاري تشغيل الكاميرا...
+                        <div class="camera-hud-top">
+                            <div id="hud-camera-status" class="hud-badge">
+                                <i class="fa-solid fa-video"></i> جاري تشغيل الكاميرا...
                             </div>
-                            <div id=hud-hands-count class=hud-badge>
-                                <i class=fa-solid fa-hand-dots></i> في انتظار اليد...
+                            <div id="hud-hands-count" class="hud-badge">
+                                <i class="fa-solid fa-hand-dots"></i> في انتظار اليد...
                             </div>
-                            <div id=hud-hand-stability class=hud-badge hud-stability>
-                                <i class=fa-regular fa-circle-pause></i> ضع يدك في الكادر
+                            <div id="hud-hand-stability" class="hud-badge hud-stability">
+                                <i class="fa-regular fa-circle-pause"></i> ضع يدك في الكادر
                             </div>
                         </div>
 
                         <!-- Active Recording Counter Ring -->
-                        <div id=recording-ring-box class=recording-ring-box style=display: none;>
-                            <span class=recording-pulse-dot></span>
-                            <span class=recording-counter id=recording-counter>0 / 50 عينة</span>
+                        <div id="recording-ring-box" class="recording-ring-box" style="display: none;">
+                            <span class="recording-pulse-dot"></span>
+                            <span class="recording-counter" id="recording-counter">0 / 50 عينة</span>
                         </div>
 
                         <!-- Center Countdown Overlay (3, 2, 1, ابدأ!) -->
-                        <div id=countdown-overlay class=countdown-overlay>
-                            <div class=countdown-number id=countdown-number>3</div>
-                            <div class=countdown-label>استعد وثبت وضعية اليد...</div>
+                        <div id="countdown-overlay" class="countdown-overlay">
+                            <div class="countdown-number" id="countdown-number">3</div>
+                            <div class="countdown-label">استعد وثبت وضعية اليد...</div>
                         </div>
                     </div>
 
                     <!-- Controls & Navigation Bar -->
-                    <div class=collector-controls>
-                        <div class=controls-group>
-                            <button id=btn-prev-letter class=btn btn-outline title=اختصار: P أو سهم يمين>
-                                <i class=fa-solid fa-arrow-right></i> الحرف السابق
+                    <div class="collector-controls">
+                        <button id="btn-start-record" class="btn btn-emerald btn-lg record-btn-main">
+                            <i class="fa-solid fa-play"></i> بدء تسجيل الجولة (مسافة)
+                        </button>
+
+                        <div class="controls-group">
+                            <button id="btn-prev-letter" class="btn btn-outline" title="اختصار: P أو سهم يمين">
+                                <i class="fa-solid fa-arrow-right"></i> الحرف السابق
                             </button>
-                            <button id=btn-next-letter class=btn btn-outline title=اختصار: N أو Q أو سهم يسار>
-                                الحرف التالي <i class=fa-solid fa-arrow-left></i>
+                            <button id="btn-next-letter" class="btn btn-outline" title="اختصار: N أو Q أو سهم يسار">
+                                الحرف التالي <i class="fa-solid fa-arrow-left"></i>
                             </button>
                         </div>
 
-                        <button id=btn-start-record class=btn btn-emerald btn-lg record-btn-main>
-                            <i class=fa-solid fa-play></i> بدء تسجيل الجولة (مسافة)
-                        </button>
-
-                        <div class=controls-group style=font-size: 0.8rem; color: var(--text-muted);>
-                            <span><kbd style=background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;>Space</kbd> تسجيل</span>
+                        <div class="controls-group" style="font-size: 0.8rem; color: var(--text-muted);">
+                            <span><kbd style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">Space</kbd> تسجيل</span>
                             <span>•</span>
-                            <span><kbd style=background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;>N</kbd> التالي</span>
+                            <span><kbd style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">N</kbd> التالي</span>
                             <span>•</span>
-                            <span><kbd style=background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;>P</kbd> السابق</span>
+                            <span><kbd style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">P</kbd> السابق</span>
                         </div>
                     </div>
                 </section>
             </div>
 
             <!-- Bottom Quick Letters Carousel Selector -->
-            <div class=letters-quick-bar>
-                <div class=letters-quick-header>
-                    <h3 style=font-size: 1rem; font-weight: 700;>
-                        <i class=fa-solid fa-arrow-pointer></i> اختر الحرف مباشرة من شبكة الـ 31 إشارة:
+            <div class="letters-quick-bar">
+                <div class="letters-quick-header">
+                    <h3 style="font-size: 1rem; font-weight: 700;">
+                        <i class="fa-solid fa-arrow-pointer"></i> اختر الحرف مباشرة من شبكة الـ 31 إشارة:
                     </h3>
-                    <span style=font-size: 0.8rem; color: var(--text-muted);>الأرقام تمثل عيناتك المسجلة لكل حرف</span>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">الأرقام تمثل عيناتك المسجلة لكل حرف</span>
                 </div>
-                <div id=letters-chips-scroll class=letters-chips-scroll></div>
+                <div id="letters-chips-scroll" class="letters-chips-scroll"></div>
             </div>
         </main>
     </div>
 
+    <!-- Mandatory Contributor Name Modal -->
+    <div id="contributor-name-modal" class="name-modal-backdrop">
+        <div class="name-modal-card">
+            <div class="name-modal-icon">
+                <i class="fa-solid fa-user-pen"></i>
+            </div>
+            <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin-bottom: 8px;">
+                مرحباً بك في استوديو إشارة 👋
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
+                يرجى إدخال اسمك لتسجيل عينات لغة الإشارة باسمك وحفظ إنجازاتك في قاعدة البيانات
+            </p>
+            <div style="margin-bottom: 20px; text-align: right;">
+                <label for="modal-name-input" style="display: block; font-size: 0.85rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px;">
+                    اسم المساهم <span style="color: #ef4444;">*</span>:
+                </label>
+                <input type="text" id="modal-name-input" class="contributor-input" style="width: 100%; padding: 12px 16px; font-size: 1.05rem;" placeholder="اكتب اسمك هنا (مثال: أحمد محمد)..." autocomplete="name">
+                <div id="modal-name-error" style="color: #ef4444; font-size: 0.8rem; margin-top: 6px; display: none;">
+                    ⚠️ يرجى كتابة اسمك أولاً للمتابعة.
+                </div>
+            </div>
+            <button id="btn-save-modal-name" class="btn btn-emerald btn-lg" style="width: 100%;">
+                <i class="fa-solid fa-circle-check"></i> تأكيد الاسم وبدء التسجيل
+            </button>
+        </div>
+    </div>
+
     <!-- Toast Notification Popup -->
-    <div id=realtime-toast></div>
+    <div id="realtime-toast"></div>
 
     <!-- Modular Scripts -->
-    <script src=assets/js/config.js></script>
-    <script src=assets/js/audio.js></script>
-    <script src=assets/js/supabase-client.js></script>
-    <script src=assets/js/collector.js></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/audio.js"></script>
+    <script src="assets/js/supabase-client.js"></script>
+    <script src="assets/js/collector.js"></script>
 </body>
 
 </html>
