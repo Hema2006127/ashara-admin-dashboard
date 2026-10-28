@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Ashara UI - Dashboard Analytics & Realtime Visualizations
  * جلب وتحليل بيانات العينات ورسم المخططات البيانية
  */

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Ashara Project - Global Configuration & Sign Data Constants
  * مشروع عشرة - إعدادات النظام وثوابت لغة الإشارة العربية
  */

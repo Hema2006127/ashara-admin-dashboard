@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Ashara Sign Collector - Web MediaPipe Hand Tracking & Landmark Extraction Engine
  * محرك تتبع حركة اليد واستخراج الـ 126 نقطة المطابقة لموديل الذكاء الاصطناعي
  */

@@ -1,13 +1,13 @@
-﻿{
-  cleanUrls: true,
-  rewrites: [
+{
+  "cleanUrls": true,
+  "rewrites": [
     {
-      source: /collector,
-      destination: /collector.html
+      "source": "/collector",
+      "destination": "/collector.html"
     },
     {
-      source: /,
-      destination: /index.html
+      "source": "/",
+      "destination": "/index.html"
     }
   ]
 }

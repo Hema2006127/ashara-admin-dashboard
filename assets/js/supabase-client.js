@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Ashara Supabase Client & Data Synchronization Layer
  * إدارة الاتصال بقاعدة بيانات Supabase، والرفع الحي، والمزامنة بدون إنترنت
  */
