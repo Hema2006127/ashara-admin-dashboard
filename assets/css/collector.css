@@ -1,0 +1,423 @@
+﻿/**
+ * Ashara UI - Sign Collector Web Application Styles
+ * تنسيقات استوديو جمع عينات لغة الإشارة وكاميرا MediaPipe
+ */
+
+.collector-wrapper {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+@media (max-width: 1100px) {
+    .collector-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Contributor Top Bar Card */
+.contributor-bar {
+    background: var(--surface);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.contributor-input-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.contributor-input-group label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.contributor-input {
+    background: var(--surface-hover);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 8px 14px;
+    color: #fff;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    outline: none;
+    transition: var(--transition);
+    min-width: 180px;
+}
+
+.contributor-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+/* Left Column: Letter Reference Card */
+.letter-guide-card {
+    background: var(--surface);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    position: sticky;
+    top: 24px;
+}
+
+.guide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.guide-letter-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.guide-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.guide-image-container {
+    width: 100%;
+    height: 240px;
+    background: #060911;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 18px;
+    position: relative;
+}
+
+.guide-image {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+}
+
+.guide-letter-overlay {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    font-size: 2.2rem;
+    font-weight: 900;
+    font-family: 'Cairo', sans-serif;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.guide-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.spec-item {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+}
+
+.spec-title {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.spec-val {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.guide-progress-box {
+    border-top: 1px solid var(--card-border);
+    padding-top: 16px;
+}
+
+/* Right Column: Camera & Studio Viewport */
+.camera-studio-card {
+    background: var(--surface);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.viewport-container {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    max-height: 520px;
+    background: #000;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--card-border);
+}
+
+/* Mirrored Video & Canvas Overlay */
+.camera-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* مرآة أفقية لتسهيل الإشارات */
+    display: block;
+}
+
+.landmark-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scaleX(-1); /* مطابق للفيديو */
+    pointer-events: none;
+}
+
+/* HUD Overlays on Top of Camera */
+.camera-hud-top {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    right: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.hud-badge {
+    background: rgba(11, 15, 25, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hud-stability {
+    transition: var(--transition);
+}
+
+.hud-stability.stable {
+    border-color: rgba(16, 185, 129, 0.5);
+    color: #34d399;
+}
+
+.hud-stability.unstable {
+    border-color: rgba(245, 158, 11, 0.5);
+    color: #fbbf24;
+}
+
+/* Center Countdown Ring Overlay */
+.countdown-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.countdown-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.countdown-number {
+    font-size: 6rem;
+    font-weight: 900;
+    font-family: 'Cairo', sans-serif;
+    color: #fff;
+    text-shadow: 0 0 30px var(--accent);
+    animation: scaleBounce 0.8s ease infinite;
+}
+
+@keyframes scaleBounce {
+    0% { transform: scale(0.7); opacity: 0; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.countdown-label {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-top: 10px;
+}
+
+/* Active Recording Ring HUD */
+.recording-ring-box {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    background: rgba(11, 15, 25, 0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: var(--radius-md);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10;
+}
+
+.recording-pulse-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--danger);
+    border-radius: 50%;
+    animation: livePulse 1s infinite;
+}
+
+.recording-counter {
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+/* Controls Bar */
+.collector-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 16px 20px;
+}
+
+.controls-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.record-btn-main {
+    min-width: 200px;
+    padding: 14px 24px;
+    font-size: 1.05rem;
+}
+
+/* Letters Quick Grid Drawer / Bar */
+.letters-quick-bar {
+    background: var(--surface);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-top: 24px;
+}
+
+.letters-quick-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.letters-chips-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+}
+
+.letter-chip-btn {
+    min-width: 52px;
+    height: 52px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.letter-chip-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+}
+
+.letter-chip-btn.active {
+    background: linear-gradient(135deg, var(--accent), var(--emerald));
+    border-color: transparent;
+    box-shadow: 0 4px 12px var(--accent-glow);
+}
+
+.letter-chip-char {
+    font-size: 1.25rem;
+    font-weight: 800;
+    font-family: 'Cairo', sans-serif;
+    line-height: 1;
+}
+
+.letter-chip-count {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-top: 3px;
+}
+
+.letter-chip-btn.active .letter-chip-count {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Offline Queue Banner */
+.offline-sync-card {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(239, 68, 68, 0.12));
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: var(--radius-md);
+    padding: 12px 18px;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.offline-sync-card.show {
+    display: flex;
+}
