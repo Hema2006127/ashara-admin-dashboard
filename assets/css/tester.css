@@ -1,0 +1,96 @@
+/* Ashara — model tester page */
+
+.muted { color: var(--text-muted); }
+.small { font-size: 0.85rem; }
+
+/* Login */
+.tester-login {
+    max-width: 420px;
+    margin: 48px auto;
+    padding: 32px 28px;
+    text-align: center;
+}
+.login-icon {
+    width: 64px; height: 64px;
+    margin: 0 auto 16px;
+    border-radius: var(--radius-full);
+    display: flex; align-items: center; justify-content: center;
+    background: var(--accent-glow);
+    color: var(--accent);
+    font-size: 1.6rem;
+}
+.tester-login h1 { font-size: 1.5rem; margin-bottom: 6px; }
+.tester-login form { display: flex; flex-direction: column; gap: 8px; margin: 24px 0 16px; text-align: right; }
+.tester-login label { font-weight: 700; color: var(--text-muted); font-size: 0.9rem; }
+.tester-login input {
+    background: var(--bg-color);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    padding: 12px 14px;
+    font: inherit;
+    margin-bottom: 8px;
+}
+.tester-login input:focus { outline: none; border-color: var(--accent); }
+.tester-login button { margin-top: 8px; justify-content: center; }
+.login-error { color: var(--danger); min-height: 1.4em; font-weight: 600; text-align: center; }
+
+/* Tester layout */
+.tester-top {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 16px; flex-wrap: wrap; margin-bottom: 20px;
+}
+.tester-top h1 { font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
+.tester-user { display: flex; align-items: center; gap: 12px; font-weight: 700; }
+
+.tester-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 20px;
+}
+
+.camera-box {
+    position: relative;
+    padding: 0;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: #000;
+}
+.camera-box video, .camera-box canvas {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* mirror for the viewer only; landmarks use the raw frame */
+}
+.camera-hint {
+    position: absolute; top: 12px; right: 12px;
+    background: var(--surface-glass);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-full);
+    padding: 6px 14px; font-size: 0.85rem;
+}
+.cam-start { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+.result-box { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 24px 20px; }
+.pred-letter { font-family: 'Cairo', sans-serif; font-size: 6.5rem; font-weight: 900; line-height: 1.2; }
+.pred-letter.unsure { color: var(--amber); }
+.pred-conf { font-size: 1.4rem; font-weight: 800; color: var(--emerald); min-height: 1.6em; }
+.pred-conf.unsure { color: var(--amber); }
+.pred-status { color: var(--amber); min-height: 1.5em; margin-top: 6px; font-size: 0.9rem; }
+
+.top3-title { margin-top: 20px; margin-bottom: 10px; font-size: 0.9rem; }
+.top3 { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.top3-row { display: grid; grid-template-columns: 40px 1fr 44px; align-items: center; gap: 8px; }
+.top3-row .l { font-family: 'Cairo', sans-serif; font-size: 1.2rem; font-weight: 800; }
+.top3-row .bar { height: 12px; border-radius: var(--radius-full); background: var(--bg-color); overflow: hidden; }
+.top3-row .bar > span { display: block; height: 100%; background: var(--accent); border-radius: inherit; transition: width 0.2s; }
+.top3-row:first-child .bar > span { background: var(--emerald); }
+.top3-row .p { color: var(--text-muted); font-size: 0.85rem; }
+
+.model-meta { margin-top: auto; padding-top: 20px; color: var(--text-subtle); font-size: 0.8rem; }
+
+@media (max-width: 900px) {
+    .tester-grid { grid-template-columns: 1fr; }
+    .pred-letter { font-size: 5rem; }
+    .tester-login { margin: 24px auto; }
+}

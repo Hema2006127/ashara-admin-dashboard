@@ -3,3 +3,9 @@ Thumbs.db
 *.log
 .vscode/
 .idea/
+
+# Secrets (MODEL_SECRET) - never commit
+.env
+.env.local
+.env*.local
+.vercel/

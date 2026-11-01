@@ -1,9 +1,17 @@
 {
   "cleanUrls": true,
+  "functions": {
+    "api/predict.js": { "includeFiles": "api/_model/**", "maxDuration": 10 },
+    "api/login.js": { "maxDuration": 10 }
+  },
   "rewrites": [
     {
       "source": "/collector",
       "destination": "/collector.html"
+    },
+    {
+      "source": "/tester",
+      "destination": "/tester.html"
     },
     {
       "source": "/",

@@ -1,233 +1,324 @@
 <!DOCTYPE html>
-<html lang=ar dir=rtl>
+<html lang="ar" dir="rtl">
 
 <head>
-    <meta charset=UTF-8>
-    <meta name=viewport content=width=device-width, initial-scale=1.0>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم والتحليلات — مشروع إشارة (Ashara AI)</title>
-    
+
     <!-- Icons & Fonts -->
-    <link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css>
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <!-- Modular Stylesheets -->
-    <link rel=stylesheet href=assets/css/common.css>
-    <link rel=stylesheet href=assets/css/dashboard.css>
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
 
     <!-- External Libraries -->
-    <script src=https://cdn.jsdelivr.net/npm/chart.js></script>
-    <script src=https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
-    <div class=app-container>
+    <div class="app-container">
         <!-- Sidebar Navigation -->
-        <aside class=sidebar>
-            <a href=index.html class=brand>
-                <div class=brand-icon>
-                    <i class=fa-solid fa-hands-asl-interpreting></i>
+        <aside class="sidebar">
+            <a href="index.html" class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-hands-asl-interpreting"></i>
                 </div>
                 <div>
-                    <div class=brand-title>اشاره • Ashara</div>
-                    <div class=brand-sub>نظام ذكاء لغة الإشارة العربية</div>
+                    <div class="brand-title">اشاره • Ashara</div>
+                    <div class="brand-sub">نظام ذكاء لغة الإشارة العربية</div>
                 </div>
             </a>
 
-            <ul class=nav-list>
-                <li class=nav-item active>
-                    <a href=index.html><i class=fa-solid fa-chart-pie></i> لوحة التحكم والتحليلات</a>
+            <ul class="nav-list">
+                <li class="nav-item active">
+                    <a href="index.html"><i class="fa-solid fa-chart-pie"></i> لوحة التحكم والتحليلات</a>
                 </li>
-                <li class=nav-item special>
-                    <a href=collector.html><i class=fa-solid fa-camera></i> جامع الإشارات أونلاين</a>
+                <li class="nav-item special">
+                    <a href="collector.html"><i class="fa-solid fa-camera"></i> جامع الإشارات أونلاين</a>
                 </li>
-                <li class=nav-item>
-                    <a href=#profiles-section><i class=fa-solid fa-id-badge></i> بروفايل الأعضاء والحروف</a>
+                <li class="nav-item">
+                    <a href="tester.html"><i class="fa-solid fa-brain"></i> اختبار الموديل</a>
                 </li>
-                <li class=nav-item>
-                    <a href=#matrix-section><i class=fa-solid fa-table-cells></i> شبكة الحروف الـ 31</a>
+                <li class="nav-item">
+                    <a href="#model-section"><i class="fa-solid fa-shield-halved"></i> الموديل وسجل الدخول</a>
                 </li>
-                <li class=nav-item>
-                    <a href=#activity-section><i class=fa-solid fa-list-check></i> سجل العينات المرفوعة</a>
+                <li class="nav-item">
+                    <a href="#profiles-section"><i class="fa-solid fa-id-badge"></i> بروفايل الأعضاء والحروف</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#matrix-section"><i class="fa-solid fa-table-cells"></i> شبكة الحروف الـ 31</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#activity-section"><i class="fa-solid fa-list-check"></i> سجل العينات المرفوعة</a>
                 </li>
             </ul>
 
-            <div class=sidebar-footer>
-                <p><i class=fa-solid fa-shield-halved></i> متصل بـ Supabase السحابي</p>
-                <p style=margin-top: 4px; font-size: 0.75rem;>مشروع تخرج 2026</p>
+            <div class="sidebar-footer">
+                <p><i class="fa-solid fa-shield-halved"></i> متصل بـ Supabase السحابي</p>
+                <p style="margin-top: 4px; font-size: 0.75rem;">مشروع تخرج 2026</p>
             </div>
         </aside>
 
         <!-- Main Content Area -->
-        <main class=main-wrapper>
+        <main class="main-wrapper">
             <!-- Top Bar -->
-            <div class=top-bar>
-                <div class=page-title>
-                    <h1><span class=live-pulse></span> لوحة متابعة جمع داتا التيم المباشرة</h1>
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1><span class="live-pulse"></span> لوحة متابعة جمع داتا التيم المباشرة</h1>
                     <p>متابعة إنجاز الفريق في جمع وتصنيف الـ 31 إشارة المعتمدة للتدريب</p>
                 </div>
-                <div class=action-btns>
-                    <a href=collector.html class=btn btn-emerald>
-                        <i class=fa-solid fa-camera></i> تسجيل عينات جديدة (Collector Web)
+                <div class="action-btns">
+                    <a href="collector.html" class="btn btn-emerald">
+                        <i class="fa-solid fa-camera"></i> تسجيل عينات جديدة (Collector Web)
                     </a>
-                    <button id=btn-refresh-data class=btn btn-outline>
-                        <i class=fa-solid fa-rotate></i> تحديث
+                    <a href="tester.html" class="btn btn-outline">
+                        <i class="fa-solid fa-brain"></i> اختبار الموديل
+                    </a>
+                    <button id="btn-refresh-data" class="btn btn-outline">
+                        <i class="fa-solid fa-rotate"></i> تحديث
                     </button>
-                    <button id=btn-export-csv class=btn btn-primary>
-                        <i class=fa-solid fa-download></i> تصدير تقرير CSV
+                    <button id="btn-export-csv" class="btn btn-primary">
+                        <i class="fa-solid fa-download"></i> تصدير تقرير CSV
                     </button>
                 </div>
             </div>
 
             <!-- Software Updates Banner (Supabase App Updates) -->
-            <div id=updates-banner class=updates-banner style=display: none;>
-                <div class=updates-banner-info>
-                    <div class=updates-banner-icon>
-                        <i class=fa-solid fa-rocket></i>
+            <div id="updates-banner" class="updates-banner" style="display: none;">
+                <div class="updates-banner-info">
+                    <div class="updates-banner-icon">
+                        <i class="fa-solid fa-rocket"></i>
                     </div>
                     <div>
-                        <h3 id=updates-version-text>برنامج SignCollector متوفر للتنزيل</h3>
-                        <p id=updates-notes>يتوفر برنامج سطح المكتب للجمع السريع عبر الكاميرا مع التحديث التلقائي.</p>
+                        <h3 id="updates-version-text">برنامج SignCollector متوفر للتنزيل</h3>
+                        <p id="updates-notes">يتوفر برنامج سطح المكتب للجمع السريع عبر الكاميرا مع التحديث التلقائي.</p>
                     </div>
                 </div>
-                <a id=updates-dl-btn href=# target=_blank class=btn btn-primary>
-                    <i class=fa-solid fa-download></i> تنزيل البرنامج
+                <a id="updates-dl-btn" href="#" target="_blank" class="btn btn-primary">
+                    <i class="fa-solid fa-download"></i> تنزيل البرنامج
                 </a>
             </div>
 
             <!-- Stats Metric Cards -->
-            <div class=stats-grid>
-                <div class=stat-card>
-                    <div class=stat-icon blue>
-                        <i class=fa-solid fa-database></i>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fa-solid fa-database"></i>
                     </div>
-                    <div class=stat-info>
-                        <div class=stat-val id=val-total-samples>0</div>
-                        <div class=stat-label>إجمالي العينات المجمعة</div>
-                    </div>
-                </div>
-
-                <div class=stat-card>
-                    <div class=stat-icon green>
-                        <i class=fa-solid fa-users></i>
-                    </div>
-                    <div class=stat-info>
-                        <div class=stat-val id=val-active-contributors>0</div>
-                        <div class=stat-label>أعضاء الفريق المساهمين</div>
+                    <div class="stat-info">
+                        <div class="stat-val" id="val-total-samples">0</div>
+                        <div class="stat-label">إجمالي العينات المجمعة</div>
                     </div>
                 </div>
 
-                <div class=stat-card>
-                    <div class=stat-icon amber>
-                        <i class=fa-solid fa-check-double></i>
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fa-solid fa-users"></i>
                     </div>
-                    <div class=stat-info>
-                        <div class=stat-val id=val-completed-letters>0 / 31</div>
-                        <div class=stat-label>الحروف المكتملة (100+ عينة)</div>
+                    <div class="stat-info">
+                        <div class="stat-val" id="val-active-contributors">0</div>
+                        <div class="stat-label">أعضاء الفريق المساهمين</div>
                     </div>
                 </div>
 
-                <div class=stat-card>
-                    <div class=stat-icon purple>
-                        <i class=fa-solid fa-chart-line></i>
+                <div class="stat-card">
+                    <div class="stat-icon amber">
+                        <i class="fa-solid fa-check-double"></i>
                     </div>
-                    <div class=stat-info>
-                        <div class=stat-val id=val-completion-rate>0%</div>
-                        <div class=stat-label>نسبة الإنجاز نحو الهدف</div>
+                    <div class="stat-info">
+                        <div class="stat-val" id="val-completed-letters">0 / 31</div>
+                        <div class="stat-label">الحروف المكتملة (100+ عينة)</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-val" id="val-completion-rate">0%</div>
+                        <div class="stat-label">نسبة الإنجاز نحو الهدف</div>
                     </div>
                 </div>
             </div>
 
             <!-- Overall Progress Bar Card -->
-            <div class=progress-card>
-                <div class=progress-header>
-                    <h3><i class=fa-solid fa-bullseye></i> التقدم الإجمالي نحو المستهدف للتدريب</h3>
-                    <div class=progress-percent id=progress-percent-label>0%</div>
+            <div class="progress-card">
+                <div class="progress-header">
+                    <h3><i class="fa-solid fa-bullseye"></i> التقدم الإجمالي نحو المستهدف للتدريب</h3>
+                    <div class="progress-percent" id="progress-percent-label">0%</div>
                 </div>
-                <div class=progress-bar-container>
-                    <div class=progress-bar-fill id=progress-bar-fill></div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progress-bar-fill"></div>
                 </div>
-                <div class=progress-meta>
-                    <span id=progress-meta-count>0 من أصل 3,100 عينة مطلوبة</span>
+                <div class="progress-meta">
+                    <span id="progress-meta-count">0 من أصل 3,100 عينة مطلوبة</span>
                     <span>الهدف: 100 عينة لكل حرف من الـ 31 حرف</span>
                 </div>
             </div>
 
-            <!-- Charts Section -->
-            <div class=charts-grid>
-                <div class=chart-card>
-                    <div class=chart-header>
-                        <h3><i class=fa-solid fa-trophy style=color: var(--amber);></i> ترتيب مساهمات أعضاء الفريق</h3>
+            <!-- Model accuracy + access log -->
+            <section id="model-section" class="model-section">
+                <div class="model-section-head">
+                    <h3><i class="fa-solid fa-brain"></i> موديل الحروف</h3>
+                    <a href="tester.html" class="btn btn-emerald"><i class="fa-solid fa-play"></i> جرّب الموديل لايف</a>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fa-solid fa-bullseye"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-val" id="model-test-acc">—</div>
+                            <div class="stat-label">دقة الموديل (Test)</div>
+                        </div>
                     </div>
-                    <div class=chart-container>
-                        <canvas id=contributorsChart></canvas>
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i class="fa-solid fa-check"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-val" id="model-val-acc">—</div>
+                            <div class="stat-label">دقة Val</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon amber"><i class="fa-solid fa-font"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-val" id="model-classes">—</div>
+                            <div class="stat-label">عدد الحروف</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple"><i class="fa-solid fa-calendar-check"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-val" id="model-trained">—</div>
+                            <div class="stat-label">آخر تدريب</div>
+                        </div>
                     </div>
                 </div>
 
-                <div class=chart-card>
-                    <div class=chart-header>
-                        <h3><i class=fa-solid fa-chart-column style=color: var(--accent);></i> توزيع العينات على الـ 31 حرف</h3>
+                <div class="model-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3><i class="fa-solid fa-arrow-trend-up" style="color: var(--emerald);"></i> تطور دقة الموديل</h3>
+                        </div>
+                        <div class="table-container">
+                            <table class="activity-table">
+                                <thead>
+                                    <tr><th>التاريخ</th><th>البيانات</th><th>الحروف</th><th>دقة Test</th></tr>
+                                </thead>
+                                <tbody id="model-history-body"></tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class=chart-container>
-                        <canvas id=lettersChart></canvas>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3><i class="fa-solid fa-user-shield" style="color: var(--accent);"></i> الأمان — آخر 24 ساعة</h3>
+                        </div>
+                        <div class="security-summary" id="security-summary">
+                            <p class="muted">جاري التحميل...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card" style="margin-top: 20px;">
+                    <div class="chart-header">
+                        <h3><i class="fa-solid fa-clock-rotate-left"></i> سجل الدخول لاختبار الموديل</h3>
+                    </div>
+                    <div class="table-container">
+                        <table class="activity-table">
+                            <thead>
+                                <tr><th>الاسم</th><th>النتيجة</th><th>الجهاز</th><th>الوقت</th></tr>
+                            </thead>
+                            <tbody id="access-log-body">
+                                <tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                                    <i class="fa-solid fa-spinner fa-spin"></i> جاري التحميل...
+                                </td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fa-solid fa-trophy" style="color: var(--amber);"></i> ترتيب مساهمات أعضاء الفريق</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="contributorsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fa-solid fa-chart-column" style="color: var(--accent);"></i> توزيع العينات على الـ 31 حرف</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="lettersChart"></canvas>
                     </div>
                 </div>
             </div>
 
             <!-- Member Dedicated Profile Section -->
-            <section id=profiles-section class=profile-section>
-                <div class=profile-top>
-                    <div class=member-picker-box>
-                        <label for=member-picker style=font-weight: 700; color: var(--text-muted);>اختر المساهم لعرض تفاصيله:</label>
-                        <select id=member-picker class=member-select></select>
+            <section id="profiles-section" class="profile-section">
+                <div class="profile-top">
+                    <div class="member-picker-box">
+                        <label for="member-picker" style="font-weight: 700; color: var(--text-muted);">اختر المساهم لعرض تفاصيله:</label>
+                        <select id="member-picker" class="member-select"></select>
                     </div>
 
-                    <div class=filter-chips>
-                        <button class=filter-chip active data-mode=all>جميع الحروف (31)</button>
-                        <button class=filter-chip data-mode=done>المكتملة فقط ✅</button>
-                        <button class=filter-chip data-mode=inprogress>قيد الجمع ⏳</button>
-                        <button class=filter-chip data-mode=missing>لم تسجل بعد ❌</button>
+                    <div class="filter-chips">
+                        <button class="filter-chip active" data-mode="all">جميع الحروف (31)</button>
+                        <button class="filter-chip" data-mode="done">المكتملة فقط ✅</button>
+                        <button class="filter-chip" data-mode="inprogress">قيد الجمع ⏳</button>
+                        <button class="filter-chip" data-mode="missing">لم تسجل بعد ❌</button>
                     </div>
                 </div>
 
-                <div class=profile-card-header>
-                    <div class=profile-avatar id=prof-avatar>A</div>
+                <div class="profile-card-header">
+                    <div class="profile-avatar" id="prof-avatar">A</div>
                     <div>
-                        <h2 id=prof-name style=font-size: 1.4rem; font-weight: 800;>المساهم</h2>
-                        <p id=prof-last-active style=color: var(--text-muted); font-size: 0.85rem;>آخر نشاط: -</p>
+                        <h2 id="prof-name" style="font-size: 1.4rem; font-weight: 800;">المساهم</h2>
+                        <p id="prof-last-active" style="color: var(--text-muted); font-size: 0.85rem;">آخر نشاط: -</p>
                     </div>
                 </div>
 
-                <div class=profile-stats-row>
-                    <div class=profile-mini-stat>
-                        <div class=profile-mini-val id=prof-samples-cnt>0</div>
-                        <div class=profile-mini-label>إجمالي العينات المرفوعة</div>
+                <div class="profile-stats-row">
+                    <div class="profile-mini-stat">
+                        <div class="profile-mini-val" id="prof-samples-cnt">0</div>
+                        <div class="profile-mini-label">إجمالي العينات المرفوعة</div>
                     </div>
-                    <div class=profile-mini-stat>
-                        <div class=profile-mini-val id=prof-letters-cnt>0 / 31</div>
-                        <div class=profile-mini-label>الحروف التي ساهم بها</div>
+                    <div class="profile-mini-stat">
+                        <div class="profile-mini-val" id="prof-letters-cnt">0 / 31</div>
+                        <div class="profile-mini-label">الحروف التي ساهم بها</div>
                     </div>
-                    <div class=profile-mini-stat>
-                        <div class=profile-mini-val id=prof-coverage-pct>0%</div>
-                        <div class=profile-mini-label>نسبة تغطية الحروف</div>
+                    <div class="profile-mini-stat">
+                        <div class="profile-mini-val" id="prof-coverage-pct">0%</div>
+                        <div class="profile-mini-label">نسبة تغطية الحروف</div>
                     </div>
                 </div>
 
                 <!-- Member Letters Grid -->
-                <div class=member-matrix-grid id=member-matrix-grid></div>
+                <div class="member-matrix-grid" id="member-matrix-grid"></div>
             </section>
 
             <!-- 31 Letters Grid Matrix -->
-            <section id=matrix-section class=matrix-section>
-                <div style=display: flex; justify-content: space-between; align-items: center;>
-                    <h3><i class=fa-solid fa-table-cells></i> شبكة الحروف الـ 31 وحالة كل حرف في الداتابيز</h3>
+            <section id="matrix-section" class="matrix-section">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3><i class="fa-solid fa-table-cells"></i> شبكة الحروف الـ 31 وحالة كل حرف في الداتابيز</h3>
                 </div>
-                <div class=matrix-grid id=matrix-grid></div>
+                <div class="matrix-grid" id="matrix-grid"></div>
             </section>
 
             <!-- Recent Activity Table -->
-            <section id=activity-section class=activity-section>
-                <h3><i class=fa-solid fa-clock-rotate-left></i> سجل آخر الجولات المرفوعة مباشرة من Supabase</h3>
-                <div class=table-container>
-                    <table class=activity-table>
+            <section id="activity-section" class="activity-section">
+                <h3><i class="fa-solid fa-clock-rotate-left"></i> سجل آخر الجولات المرفوعة مباشرة من Supabase</h3>
+                <div class="table-container">
+                    <table class="activity-table">
                         <thead>
                             <tr>
                                 <th>المساهم</th>
@@ -236,10 +327,10 @@
                                 <th>وقت وتاريخ الرفع</th>
                             </tr>
                         </thead>
-                        <tbody id=activity-table-body>
+                        <tbody id="activity-table-body">
                             <tr>
-                                <td colspan=4 style=text-align: center; color: var(--text-muted); padding: 30px;>
-                                    <i class=fa-solid fa-spinner fa-spin></i> جاري تحميل السجلات من السيرفر...
+                                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                                    <i class="fa-solid fa-spinner fa-spin"></i> جاري تحميل السجلات من السيرفر...
                                 </td>
                             </tr>
                         </tbody>
@@ -250,19 +341,20 @@
     </div>
 
     <!-- Live Floating Status Indicator -->
-    <div class=live-indicator-badge>
-        <span id=live-dot class=live-pulse></span>
-        <span id=live-text>جاري الاتصال بقاعدة البيانات...</span>
+    <div class="live-indicator-badge">
+        <span id="live-dot" class="live-pulse"></span>
+        <span id="live-text">جاري الاتصال بقاعدة البيانات...</span>
     </div>
 
     <!-- Toast Popup Notification -->
-    <div id=realtime-toast></div>
+    <div id="realtime-toast"></div>
 
     <!-- Modular Scripts -->
-    <script src=assets/js/config.js></script>
-    <script src=assets/js/audio.js></script>
-    <script src=assets/js/supabase-client.js></script>
-    <script src=assets/js/dashboard.js></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/audio.js"></script>
+    <script src="assets/js/supabase-client.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/model-panel.js"></script>
 </body>
 
 </html>

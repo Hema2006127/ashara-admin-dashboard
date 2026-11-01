@@ -504,3 +504,42 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ── Model section (accuracy + access log) ───────────────────────────── */
+.model-section {
+    background: var(--surface);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 28px;
+}
+.model-section-head {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; flex-wrap: wrap; margin-bottom: 18px;
+}
+.model-section-head h3 { font-size: 1.2rem; display: flex; gap: 10px; align-items: center; }
+.model-section .stats-grid { margin-bottom: 20px; }
+.model-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.row-current td { background: rgba(16, 185, 129, 0.06); }
+.badge-current {
+    background: rgba(16, 185, 129, 0.2); color: #34d399;
+    border-radius: var(--radius-full); padding: 2px 8px; font-size: 0.75rem; margin-inline-start: 6px;
+}
+.status-tag { display: inline-flex; align-items: center; gap: 6px; border-radius: var(--radius-full); padding: 3px 10px; font-size: 0.8rem; font-weight: 700; }
+.status-tag.ok { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+.status-tag.fail { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+.status-tag.blocked { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
+.empty-cell { text-align: center; color: var(--text-muted); padding: 24px !important; }
+.security-summary .muted { color: var(--text-muted); }
+.security-summary .small { font-size: 0.8rem; margin-top: 12px; }
+.security-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; text-align: center; margin-bottom: 14px; }
+.security-stats .sv { font-family: 'Cairo', sans-serif; font-size: 1.8rem; font-weight: 800; }
+.security-stats .sv.bad { color: var(--danger); }
+.security-stats .sl { color: var(--text-muted); font-size: 0.85rem; }
+.security-alert, .security-ok { border-radius: var(--radius-md); padding: 10px 14px; font-weight: 600; font-size: 0.9rem; }
+.security-alert { background: rgba(239, 68, 68, 0.12); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
+.security-ok { background: rgba(16, 185, 129, 0.1); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.25); }
+
+@media (max-width: 900px) {
+    .model-grid { grid-template-columns: 1fr; }
+}

@@ -78,4 +78,27 @@ python -m http.server 8000
 المشروع جاهز فوراً للنشر على **Vercel** أو **Netlify** أو **GitHub Pages**. تم ضبط ملف ercel.json للتوجيه السلس للروابط النظيفة.
 
 ---
+
+## 🧠 اختبار الموديل أونلاين (tester.html) — بصلاحيات
+
+- الكاميرا و MediaPipe بيشتغلوا في المتصفح، وبيتبعت **126 رقم بس** لـ `/api/predict`. الموديل بيشتغل على Vercel ومحدش بينزّله.
+- ملف الموديل في الريبو **مشفّر** (`api/_model/letters_model.enc`)، ومفتاحه `MODEL_SECRET` موجود في إعدادات Vercel بس.
+- الدخول بالاسم + كود شخصي من جدول `model_testers`. كل محاولة بتتسجل في `model_access_log` وبتظهر في الداشبورد، وبعد 5 محاولات غلط الاسم بيتقفل 15 دقيقة.
+
+### الإعداد (مرة واحدة)
+1. **Supabase → SQL Editor:** شغّل `supabase/model_access.sql`.
+2. **Vercel → Settings → Environment Variables:** ضيف `MODEL_SECRET` بنفس القيمة الموجودة في `.env.local` (الملف ده ما بيترفعش على GitHub)، وبعدها اعمل Redeploy.
+3. **إضافة عضو (SQL Editor):** `select add_model_tester('Ahmed');` بترجع الكود الشخصي بتاعه.
+   **سحب الصلاحية:** `update model_testers set is_active = false where name = 'Ahmed';` (الجلسة المفتوحة بتنتهي خلال 4 ساعات بالكتير).
+
+### تحديث الموديل بعد تدريب جديد
+```bash
+# من مشروع الموديل
+.venv\Scripts\python.exe tools\export_model_web.py --out <مجلد مؤقت>
+# من هنا
+node scripts/encrypt-model.js <مجلد مؤقت>/letters_model.bin <مجلد مؤقت>/model_test.json
+copy <مجلد مؤقت>\model-info.json assets\data\model-info.json
+```
+
+---
 مشروع تخرج إشارة (Ashara AI) © 2026
