@@ -3,6 +3,11 @@
  * جلب وتحليل بيانات العينات ورسم المخططات البيانية
  */
 
+/** Reads a theme colour token (CSS variable) so canvas charts follow light/dark mode. */
+const themeColor = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const themeRgba = (rgbName, a) => `rgba(${themeColor(rgbName)}, ${a})`;
+const THEME_FONT = getComputedStyle(document.documentElement).getPropertyValue('--font').trim() || 'sans-serif';
+
 class AsharaDashboardEngine {
     constructor() {
         this.config = window.AsharaConfig;
@@ -20,6 +25,7 @@ class AsharaDashboardEngine {
 
     async init() {
         this._setupDOMListeners();
+        window.addEventListener('ashara:theme', () => { if (this.cachedRows.length) this.renderDashboard(this.cachedRows); });
         await this.loadDashboardData();
         this._setupRealtime();
         this._loadAppUpdates();
@@ -62,7 +68,7 @@ class AsharaDashboardEngine {
             this.renderDashboard(rows);
 
             if (liveText) liveText.innerText = 'متصل بـ Supabase (مباشر)';
-            if (liveDot) liveDot.style.background = '#10b981';
+            if (liveDot) liveDot.style.background = 'var(--emerald)';
 
             if (isManual) {
                 this.showToast('تم تحديث البيانات من السيرفر بنجاح ✅');
@@ -70,7 +76,7 @@ class AsharaDashboardEngine {
         } catch (err) {
             console.error('Failed to load dashboard data:', err);
             if (liveText) liveText.innerText = 'خطأ في الاتصال بالسيرفر';
-            if (liveDot) liveDot.style.background = '#ef4444';
+            if (liveDot) liveDot.style.background = 'var(--danger)';
         }
     }
 
@@ -160,8 +166,8 @@ class AsharaDashboardEngine {
                 datasets: [{
                     label: 'العينات المجمعة',
                     data,
-                    backgroundColor: 'rgba(59, 130, 246, 0.75)',
-                    borderColor: '#3b82f6',
+                    backgroundColor: themeRgba('--accent-rgb', 0.8),
+                    borderColor: themeColor('--accent'),
                     borderWidth: 1,
                     borderRadius: 6
                 }]
@@ -174,12 +180,12 @@ class AsharaDashboardEngine {
                 },
                 scales: {
                     x: {
-                        ticks: { color: '#94a3b8', font: { family: 'Tajawal' } },
+                        ticks: { color: themeColor('--text-muted'), font: { family: THEME_FONT } },
                         grid: { display: false }
                     },
                     y: {
-                        ticks: { color: '#94a3b8', font: { family: 'Tajawal' } },
-                        grid: { color: 'rgba(255,255,255,0.05)' }
+                        ticks: { color: themeColor('--text-muted'), font: { family: THEME_FONT } },
+                        grid: { color: themeRgba('--ink-rgb', 0.07) }
                     }
                 }
             }
@@ -190,9 +196,9 @@ class AsharaDashboardEngine {
         const labels = this.config.LETTERS;
         const data = labels.map(l => letterMap[l]?.count || 0);
         const bgColors = data.map(val => {
-            if (val >= this.config.TARGET_PER_LETTER) return 'rgba(16, 185, 129, 0.8)';
-            if (val > 0) return 'rgba(245, 158, 11, 0.8)';
-            return 'rgba(239, 68, 68, 0.6)';
+            if (val >= this.config.TARGET_PER_LETTER) return themeRgba('--emerald-rgb', 0.85);
+            if (val > 0) return themeRgba('--amber-rgb', 0.85);
+            return themeRgba('--danger-rgb', 0.6);
         });
 
         const canvas = document.getElementById('lettersChart');
@@ -219,12 +225,12 @@ class AsharaDashboardEngine {
                 },
                 scales: {
                     x: {
-                        ticks: { color: '#94a3b8', font: { family: 'Cairo', weight: 'bold' } },
+                        ticks: { color: themeColor('--text-main'), font: { family: THEME_FONT, weight: 'bold' } },
                         grid: { display: false }
                     },
                     y: {
-                        ticks: { color: '#94a3b8', font: { family: 'Tajawal' } },
-                        grid: { color: 'rgba(255,255,255,0.05)' }
+                        ticks: { color: themeColor('--text-muted'), font: { family: THEME_FONT } },
+                        grid: { color: themeRgba('--ink-rgb', 0.07) }
                     }
                 }
             }
@@ -287,7 +293,7 @@ class AsharaDashboardEngine {
         const nameElem = document.getElementById('prof-name');
         if (nameElem) nameElem.innerText = `المساهم: ${name}`;
 
-        const lastActiveFormatted = data.lastActive ? new Date(data.lastActive).toLocaleString('ar-EG') : '-';
+        const lastActiveFormatted = data.lastActive ? new Date(data.lastActive).toLocaleString('ar-EG-u-nu-latn') : '-';
         const lastActiveElem = document.getElementById('prof-last-active');
         if (lastActiveElem) lastActiveElem.innerText = `آخر نشاط: ${lastActiveFormatted}`;
 
@@ -333,7 +339,7 @@ class AsharaDashboardEngine {
         });
 
         if (container.children.length === 0) {
-            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #94a3b8; padding: 20px;">لا توجد حروف تطابق هذا الفلتر لهذا العضو.</div>`;
+            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 20px;">لا توجد حروف تطابق هذا الفلتر لهذا العضو.</div>`;
         }
     }
 
@@ -363,7 +369,7 @@ class AsharaDashboardEngine {
             card.innerHTML = `
                 <div class="matrix-card-char">${letter}</div>
                 <div class="matrix-card-name">${this.config.LETTER_NAMES[letter] || ''}</div>
-                <div class="letter-samples" style="font-weight: 700; color: #fff;">${count.toLocaleString()} عينة</div>
+                <div class="letter-samples" style="font-weight: 700; color: var(--text-main);">${count.toLocaleString()} عينة</div>
                 <div class="letter-status-tag ${statusClass}" style="margin-top: 6px;">${statusLabel}</div>
             `;
             container.appendChild(card);
@@ -379,15 +385,15 @@ class AsharaDashboardEngine {
 
         latest.forEach(r => {
             const tr = document.createElement('tr');
-            const dateStr = r.created_at ? new Date(r.created_at).toLocaleString('ar-EG') : '-';
+            const dateStr = r.created_at ? new Date(r.created_at).toLocaleString('ar-EG-u-nu-latn') : '-';
             const letter = r.letter || '-';
             const letterName = this.config.LETTER_NAMES[letter] || letter;
 
             tr.innerHTML = `
                 <td><span class="badge-contributor"><i class="fa-solid fa-user"></i> ${r.contributor || 'anonymous'}</span></td>
-                <td><span class="badge-letter">${letter}</span> <span style="font-size: 0.8rem; color: #94a3b8;">(${letterName})</span></td>
+                <td><span class="badge-letter">${letter}</span> <span style="font-size: 0.8rem; color: var(--text-muted);">(${letterName})</span></td>
                 <td style="font-weight: 700;">+${(r.sample_count || 50)} عينة</td>
-                <td style="color: #94a3b8; font-size: 0.82rem;">${dateStr}</td>
+                <td style="color: var(--text-muted); font-size: 0.82rem;">${dateStr}</td>
             `;
             tbody.appendChild(tr);
         });

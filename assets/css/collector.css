@@ -41,8 +41,8 @@
     border: 1px solid var(--card-border);
     border-radius: var(--radius-md);
     padding: 8px 14px;
-    color: #fff;
-    font-family: 'Tajawal', sans-serif;
+    color: var(--text-main);
+    font-family: var(--font);
     font-size: 0.95rem;
     font-weight: 700;
     outline: none;
@@ -56,8 +56,8 @@
 }
 
 .contributor-input.error {
-    border-color: #ef4444;
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.35);
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(var(--danger-rgb), 0.35);
     animation: shake 0.4s ease;
 }
 
@@ -87,7 +87,7 @@
 .guide-letter-title {
     font-size: 1.4rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--text-main);
 }
 
 .guide-badge {
@@ -100,7 +100,7 @@
 .guide-image-container {
     width: 100%;
     height: 240px;
-    background: #060911;
+    background: var(--bg-color);
     border: 1px solid var(--card-border);
     border-radius: var(--radius-md);
     display: flex;
@@ -124,8 +124,8 @@
     right: 12px;
     font-size: 2.2rem;
     font-weight: 900;
-    font-family: 'Cairo', sans-serif;
-    color: rgba(255, 255, 255, 0.4);
+    font-family: var(--font);
+    color: rgba(var(--ink-rgb), 0.4);
 }
 
 .guide-specs {
@@ -136,7 +136,7 @@
 }
 
 .spec-item {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(var(--ink-rgb), 0.02);
     border: 1px solid var(--card-border);
     border-radius: var(--radius-md);
     padding: 10px 14px;
@@ -154,7 +154,7 @@
 .spec-val {
     font-size: 0.88rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-main);
 }
 
 .guide-progress-box {
@@ -218,9 +218,9 @@
 }
 
 .hud-badge {
-    background: rgba(11, 15, 25, 0.88);
+    background: rgba(var(--bg-rgb), 0.88);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(var(--ink-rgb), 0.15);
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 0.82rem;
@@ -236,13 +236,13 @@
 }
 
 .hud-stability.stable {
-    border-color: rgba(16, 185, 129, 0.5);
-    color: #34d399;
+    border-color: rgba(var(--emerald-rgb), 0.5);
+    color: var(--emerald-text);
 }
 
 .hud-stability.unstable {
-    border-color: rgba(245, 158, 11, 0.5);
-    color: #fbbf24;
+    border-color: rgba(var(--amber-rgb), 0.5);
+    color: var(--amber-text);
 }
 
 /* Center Countdown Ring Overlay */
@@ -269,7 +269,7 @@
 .countdown-number {
     font-size: 5.5rem;
     font-weight: 900;
-    font-family: 'Cairo', sans-serif;
+    font-family: var(--font);
     color: #fff;
     text-shadow: 0 0 30px var(--accent);
     animation: scaleBounce 0.8s ease infinite;
@@ -293,9 +293,9 @@
     position: absolute;
     bottom: 16px;
     right: 16px;
-    background: rgba(11, 15, 25, 0.9);
+    background: rgba(var(--bg-rgb), 0.9);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(16, 185, 129, 0.4);
+    border: 1px solid rgba(var(--emerald-rgb), 0.4);
     border-radius: var(--radius-md);
     padding: 10px 16px;
     display: flex;
@@ -313,7 +313,7 @@
 }
 
 .recording-counter {
-    font-family: 'Cairo', sans-serif;
+    font-family: var(--font);
     font-size: 1.15rem;
     font-weight: 800;
     color: #fff;
@@ -326,7 +326,7 @@
     justify-content: space-between;
     gap: 14px;
     flex-wrap: wrap;
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(var(--ink-rgb), 0.02);
     border: 1px solid var(--card-border);
     border-radius: var(--radius-lg);
     padding: 16px 20px;
@@ -370,7 +370,7 @@
 .letter-chip-btn {
     min-width: 52px;
     height: 52px;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(var(--ink-rgb), 0.04);
     border: 1px solid var(--card-border);
     border-radius: var(--radius-md);
     display: flex;
@@ -379,7 +379,7 @@
     justify-content: center;
     cursor: pointer;
     transition: var(--transition);
-    color: #fff;
+    color: var(--text-main);
     flex-shrink: 0;
 }
 
@@ -397,7 +397,7 @@
 .letter-chip-char {
     font-size: 1.25rem;
     font-weight: 800;
-    font-family: 'Cairo', sans-serif;
+    font-family: var(--font);
     line-height: 1;
 }
 
@@ -408,13 +408,13 @@
 }
 
 .letter-chip-btn.active .letter-chip-count {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(var(--ink-rgb), 0.9);
 }
 
 /* Offline Queue Banner */
 .offline-sync-card {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(239, 68, 68, 0.12));
-    border: 1px solid rgba(245, 158, 11, 0.3);
+    background: linear-gradient(135deg, rgba(var(--amber-rgb), 0.12), rgba(var(--danger-rgb), 0.12));
+    border: 1px solid rgba(var(--amber-rgb), 0.3);
     border-radius: var(--radius-md);
     padding: 12px 18px;
     display: none;
@@ -446,8 +446,8 @@
 }
 
 .name-modal-card {
-    background: #131825;
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: var(--surface);
+    border: 1px solid rgba(var(--ink-rgb), 0.14);
     border-radius: var(--radius-xl);
     padding: 30px 24px;
     max-width: 440px;
@@ -466,12 +466,12 @@
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #3b82f6, #10b981);
+    background: linear-gradient(135deg, var(--accent), var(--emerald));
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.8rem;
-    color: #fff;
+    color: var(--on-accent);
     margin: 0 auto 16px;
     box-shadow: 0 8px 24px var(--accent-glow);
 }

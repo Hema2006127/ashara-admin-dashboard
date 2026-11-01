@@ -143,7 +143,7 @@
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, w, h);
         (results.multiHandLandmarks || []).forEach(lm => {
-            ctx.strokeStyle = 'rgba(16, 185, 129, 0.9)'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--emerald').trim(); ctx.lineWidth = 3; ctx.lineCap = 'round';
             for (const [a, b] of BONES) {
                 ctx.beginPath(); ctx.moveTo(lm[a].x * w, lm[a].y * h); ctx.lineTo(lm[b].x * w, lm[b].y * h); ctx.stroke();
             }

@@ -228,7 +228,7 @@
     function toast(message, isError) {
         const el = $('realtime-toast');
         el.innerHTML = `<i class="fa-solid ${isError ? 'fa-triangle-exclamation' : 'fa-circle-check'}"></i> ${esc(message)}`;
-        el.style.background = isError ? 'linear-gradient(135deg, #ef4444, #b91c1c)' : '';
+        el.style.background = isError ? 'var(--danger)' : '';
         el.classList.add('show');
         clearTimeout(toastTimer);
         toastTimer = setTimeout(() => el.classList.remove('show'), 3500);

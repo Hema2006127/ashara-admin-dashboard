@@ -3,38 +3,151 @@
  * نظام التصميم المشترك - مشروع عشرة
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap');
 
+/*
+ * Palette = the Ashara mobile app: forest green, mustard gold, warm cream, SOS red.
+ * Light theme is the default; dark follows the system unless the user picks a theme
+ * (assets/js/theme.js sets <html data-theme>). Token names are kept from the old
+ * palette so every stylesheet keeps working:
+ *   --accent   primary brand (forest green in light, gold in dark)
+ *   --emerald  success / "done" (sage green)
+ *   --amber    warning / in progress (mustard)
+ *   --purple   secondary tone (olive)
+ *   --danger   SOS red
+ * Each colour has an "-rgb" triplet for alpha tints: rgba(var(--accent-rgb), 0.15).
+ */
 :root {
-    --bg-color: #0b0f19;
-    --surface: #131825;
-    --surface-hover: #1a2234;
-    --surface-glass: rgba(19, 24, 37, 0.75);
-    --card-border: rgba(255, 255, 255, 0.08);
-    --card-border-hover: rgba(59, 130, 246, 0.35);
-    
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --text-subtle: #64748b;
-    
-    --accent: #3b82f6;
-    --accent-glow: rgba(59, 130, 246, 0.25);
-    --accent-cyan: #06b6d4;
-    --emerald: #10b981;
-    --emerald-glow: rgba(16, 185, 129, 0.25);
-    --amber: #f59e0b;
-    --purple: #a855f7;
-    --danger: #ef4444;
-    
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 24px;
+    color-scheme: light;
+    --bg-color: #efe9dc;
+    --bg-rgb: 239, 233, 220;
+    --bg-gradient: radial-gradient(1200px 600px at 85% -10%, rgba(212, 174, 92, 0.22), transparent 60%),
+                   radial-gradient(900px 600px at 0% 100%, rgba(95, 122, 74, 0.16), transparent 60%);
+    --surface: #fbf8f1;
+    --surface-hover: #f3eee2;
+    --surface-glass: rgba(251, 248, 241, 0.82);
+    --sidebar-bg: linear-gradient(180deg, #f8f4ea 0%, #efe9dc 100%);
+    --ink-rgb: 31, 42, 29;
+    --card-border: rgba(31, 42, 29, 0.10);
+    --card-border-hover: rgba(46, 74, 43, 0.35);
+
+    --text-main: #1f2a1d;
+    --text-muted: #5f6857;
+    --text-subtle: #8c8f80;
+
+    --accent: #2e4a2b;
+    --accent-rgb: 46, 74, 43;
+    --accent-text: #2e4a2b;
+    --on-accent: #f7f3e8;
+    --accent-glow: rgba(46, 74, 43, 0.18);
+    --accent-cyan: #5f7a4a;
+    --emerald: #5a7d3c;
+    --emerald-rgb: 90, 125, 60;
+    --emerald-text: #44672b;
+    --on-emerald: #ffffff;
+    --emerald-glow: rgba(90, 125, 60, 0.2);
+    --amber: #c99a3b;
+    --amber-rgb: 201, 154, 59;
+    --amber-text: #8f6a1f;
+    --purple: #6f7d4f;
+    --purple-rgb: 111, 125, 79;
+    --purple-text: #56623a;
+    --danger: #e2452f;
+    --danger-rgb: 226, 69, 47;
+    --danger-text: #c0331e;
+
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
     --radius-full: 9999px;
-    
-    --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.25);
-    --shadow-glow: 0 0 25px rgba(59, 130, 246, 0.2);
+
+    --shadow-subtle: 0 6px 24px rgba(31, 42, 29, 0.08);
+    --shadow-glow: 0 8px 28px rgba(46, 74, 43, 0.15);
     --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    --font: 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Dark theme — near-black with olive glow and a gold primary, like the app */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg-color: #0d100c;
+        --bg-rgb: 13, 16, 12;
+        --bg-gradient: radial-gradient(1200px 700px at 85% -10%, rgba(201, 166, 90, 0.10), transparent 60%),
+                       radial-gradient(900px 700px at 0% 100%, rgba(90, 125, 60, 0.14), transparent 60%);
+        --surface: #161a14;
+        --surface-hover: #1e231b;
+        --surface-glass: rgba(22, 26, 20, 0.82);
+        --sidebar-bg: linear-gradient(180deg, #141812 0%, #0d100c 100%);
+        --ink-rgb: 241, 234, 216;
+        --card-border: rgba(241, 234, 216, 0.09);
+        --card-border-hover: rgba(207, 174, 98, 0.4);
+        --text-main: #f1ead8;
+        --text-muted: #b3ad9c;
+        --text-subtle: #7f7a6d;
+        --accent: #cfae62;
+        --accent-rgb: 207, 174, 98;
+        --accent-text: #dcbf78;
+        --on-accent: #1d1a12;
+        --accent-glow: rgba(207, 174, 98, 0.22);
+        --accent-cyan: #8fae6a;
+        --emerald: #7fa25a;
+        --emerald-rgb: 127, 162, 90;
+        --emerald-text: #a8c683;
+        --on-emerald: #10140d;
+        --emerald-glow: rgba(127, 162, 90, 0.22);
+        --amber: #d9b25e;
+        --amber-rgb: 217, 178, 94;
+        --amber-text: #e6c67f;
+        --purple: #95a36f;
+        --purple-rgb: 149, 163, 111;
+        --purple-text: #b5c290;
+        --danger: #e2563f;
+        --danger-rgb: 226, 86, 63;
+        --danger-text: #f08a77;
+        --shadow-subtle: 0 6px 24px rgba(0, 0, 0, 0.35);
+        --shadow-glow: 0 8px 28px rgba(207, 174, 98, 0.15);
+    }
+}
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg-color: #0d100c;
+    --bg-rgb: 13, 16, 12;
+    --bg-gradient: radial-gradient(1200px 700px at 85% -10%, rgba(201, 166, 90, 0.10), transparent 60%),
+                   radial-gradient(900px 700px at 0% 100%, rgba(90, 125, 60, 0.14), transparent 60%);
+    --surface: #161a14;
+    --surface-hover: #1e231b;
+    --surface-glass: rgba(22, 26, 20, 0.82);
+    --sidebar-bg: linear-gradient(180deg, #141812 0%, #0d100c 100%);
+    --ink-rgb: 241, 234, 216;
+    --card-border: rgba(241, 234, 216, 0.09);
+    --card-border-hover: rgba(207, 174, 98, 0.4);
+    --text-main: #f1ead8;
+    --text-muted: #b3ad9c;
+    --text-subtle: #7f7a6d;
+    --accent: #cfae62;
+    --accent-rgb: 207, 174, 98;
+    --accent-text: #dcbf78;
+    --on-accent: #1d1a12;
+    --accent-glow: rgba(207, 174, 98, 0.22);
+    --accent-cyan: #8fae6a;
+    --emerald: #7fa25a;
+    --emerald-rgb: 127, 162, 90;
+    --emerald-text: #a8c683;
+    --on-emerald: #10140d;
+    --emerald-glow: rgba(127, 162, 90, 0.22);
+    --amber: #d9b25e;
+    --amber-rgb: 217, 178, 94;
+    --amber-text: #e6c67f;
+    --purple: #95a36f;
+    --purple-rgb: 149, 163, 111;
+    --purple-text: #b5c290;
+    --danger: #e2563f;
+    --danger-rgb: 226, 86, 63;
+    --danger-text: #f08a77;
+    --shadow-subtle: 0 6px 24px rgba(0, 0, 0, 0.35);
+    --shadow-glow: 0 8px 28px rgba(207, 174, 98, 0.15);
 }
 
 * {
@@ -44,8 +157,9 @@
 }
 
 body {
-    font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: var(--bg-color);
+    font-family: var(--font);
+    background: var(--bg-gradient), var(--bg-color);
+    background-attachment: fixed;
     color: var(--text-main);
     min-height: 100vh;
     line-height: 1.6;
@@ -54,14 +168,30 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6, .font-cairo {
-    font-family: 'Cairo', sans-serif;
+    font-family: var(--font);
+    letter-spacing: -0.01em;
 }
+
+/* Theme toggle (sidebar footer) */
+.theme-toggle {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-bottom: 12px;
+    padding: 7px 14px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--card-border);
+    background: var(--surface);
+    color: var(--text-main);
+    font: inherit; font-size: 0.82rem; font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.theme-toggle:hover { border-color: var(--card-border-hover); }
 
 /* `hidden` must win over component display rules (e.g. .btn { display: inline-flex }) */
 [hidden] { display: none !important; }
 
 /* Visible keyboard focus */
-:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
@@ -69,14 +199,14 @@ h1, h2, h3, h4, h5, h6, .font-cairo {
     height: 8px;
 }
 ::-webkit-scrollbar-track {
-    background: #0b0f19;
+    background: var(--bg-color);
 }
 ::-webkit-scrollbar-thumb {
-    background: #1e293b;
+    background: var(--surface-hover);
     border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #334155;
+    background: var(--surface-hover);
 }
 
 /* Base Layout */
@@ -89,7 +219,7 @@ h1, h2, h3, h4, h5, h6, .font-cairo {
 /* Sidebar */
 .sidebar {
     width: 270px;
-    background: linear-gradient(180deg, #111624 0%, #0b0f19 100%);
+    background: var(--sidebar-bg);
     border-left: 1px solid var(--card-border);
     padding: 24px 18px;
     display: flex;
@@ -114,13 +244,13 @@ h1, h2, h3, h4, h5, h6, .font-cairo {
 .brand-icon {
     width: 44px;
     height: 44px;
-    background: linear-gradient(135deg, #3b82f6, #10b981);
+    background: linear-gradient(135deg, var(--accent), var(--emerald));
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.3rem;
-    color: #fff;
+    color: var(--on-accent);
     box-shadow: 0 4px 14px var(--accent-glow);
     flex-shrink: 0;
 }
@@ -128,7 +258,7 @@ h1, h2, h3, h4, h5, h6, .font-cairo {
 .brand-title {
     font-size: 1.25rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--text-main);
     line-height: 1.2;
 }
 
@@ -160,24 +290,24 @@ h1, h2, h3, h4, h5, h6, .font-cairo {
 
 .nav-item a:hover {
     background: var(--surface-hover);
-    color: #fff;
+    color: var(--text-main);
 }
 
 .nav-item.active a {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(16, 185, 129, 0.15));
-    color: #38bdf8;
-    border-right: 3px solid #38bdf8;
+    background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.15), rgba(var(--emerald-rgb), 0.15));
+    color: var(--accent-text);
+    border-right: 3px solid var(--accent-text);
 }
 
 .nav-item.special a {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(6, 182, 212, 0.18));
-    color: #34d399;
-    border: 1px dashed rgba(16, 185, 129, 0.4);
+    background: linear-gradient(135deg, rgba(var(--emerald-rgb), 0.18), rgba(var(--emerald-rgb), 0.18));
+    color: var(--emerald-text);
+    border: 1px dashed rgba(var(--emerald-rgb), 0.4);
 }
 
 .nav-item.special a:hover {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(6, 182, 212, 0.3));
-    color: #fff;
+    background: linear-gradient(135deg, rgba(var(--emerald-rgb), 0.3), rgba(var(--emerald-rgb), 0.3));
+    color: var(--text-main);
 }
 
 .sidebar-footer {
@@ -204,7 +334,7 @@ h1, h2, h3, h4, h5, h6, .font-cairo {
     gap: 8px;
     padding: 10px 18px;
     border-radius: var(--radius-md);
-    font-family: 'Cairo', sans-serif;
+    font-family: var(--font);
     font-weight: 700;
     font-size: 0.9rem;
     border: 1px solid transparent;
@@ -215,43 +345,43 @@ h1, h2, h3, h4, h5, h6, .font-cairo {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: #fff;
+    background: linear-gradient(135deg, var(--accent), var(--accent));
+    color: var(--on-accent);
     box-shadow: 0 4px 14px var(--accent-glow);
 }
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 6px 20px rgba(var(--accent-rgb), 0.4);
 }
 
 .btn-emerald {
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: #fff;
+    background: linear-gradient(135deg, var(--emerald), var(--emerald));
+    color: var(--on-emerald);
     box-shadow: 0 4px 14px var(--emerald-glow);
 }
 .btn-emerald:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 6px 20px rgba(var(--emerald-rgb), 0.4);
 }
 
 .btn-outline {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(var(--ink-rgb), 0.05);
     border-color: var(--card-border);
     color: var(--text-main);
 }
 .btn-outline:hover {
     background: var(--surface-hover);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: #fff;
+    border-color: rgba(var(--ink-rgb), 0.2);
+    color: var(--text-main);
 }
 
 .btn-danger {
-    background: rgba(239, 68, 68, 0.15);
-    border-color: rgba(239, 68, 68, 0.3);
-    color: #f87171;
+    background: rgba(var(--danger-rgb), 0.15);
+    border-color: rgba(var(--danger-rgb), 0.3);
+    color: var(--danger-text);
 }
 .btn-danger:hover {
-    background: #ef4444;
+    background: var(--danger);
     color: #fff;
 }
 
@@ -312,12 +442,12 @@ h1, h2, h3, h4, h5, h6, .font-cairo {
     left: 50%;
     transform: translateX(-50%) translateY(-120px);
     z-index: 10000;
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, var(--emerald), var(--emerald));
     color: white;
     padding: 12px 24px;
     border-radius: var(--radius-md);
     font-weight: 700;
-    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.35);
+    box-shadow: 0 10px 30px rgba(var(--emerald-rgb), 0.35);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     pointer-events: none;
     display: flex;

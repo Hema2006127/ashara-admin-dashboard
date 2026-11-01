@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <script src="assets/js/theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>جامع عينات لغة الإشارة — مشروع إشارة (Ashara Sign Collector Web)</title>
 
@@ -56,17 +57,17 @@
             <div class="contributor-bar">
                 <div class="contributor-input-group">
                     <label for="contributor-name-input">
-                        <i class="fa-solid fa-user-tag"></i> اسم المساهم <span style="color: #ef4444;">*</span>:
+                        <i class="fa-solid fa-user-tag"></i> اسم المساهم <span style="color: var(--danger);">*</span>:
                     </label>
                     <input type="text" id="contributor-name-input" class="contributor-input" placeholder="اكتب اسمك للمتابعة..." autocomplete="name">
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
                     <div style="font-size: 0.88rem; color: var(--text-muted);">
-                        مجموع عيناتك: <strong id="contributor-total-samples" style="color: #38bdf8; font-size: 1.05rem;">0</strong>
+                        مجموع عيناتك: <strong id="contributor-total-samples" style="color: var(--accent-text); font-size: 1.05rem;">0</strong>
                     </div>
                     <div style="font-size: 0.88rem; color: var(--text-muted);">
-                        الحروف المكتملة لك: <strong id="contributor-completed-letters" style="color: #34d399; font-size: 1.05rem;"><span dir="ltr">0 / 31</span> حرف مكتمل</strong>
+                        الحروف المكتملة لك: <strong id="contributor-completed-letters" style="color: var(--emerald-text); font-size: 1.05rem;"><span dir="ltr">0 / 31</span> حرف مكتمل</strong>
                     </div>
                     <button id="btn-toggle-sound" class="btn btn-outline" style="padding: 6px 14px; font-size: 0.82rem;">
                         <i class="fa-solid fa-volume-high"></i> المؤثرات مفعلة
@@ -84,7 +85,7 @@
                     <div>
                         <strong>تنبيه مزامنة بدون إنترنت:</strong>
                         <span style="font-size: 0.85rem; color: var(--text-muted); margin-right: 6px;">
-                            يوجد <span id="offline-pending-count" style="font-weight: 800; color: #fff;">0</span> جولة محفوظة محلياً لم ترفع بعد.
+                            يوجد <span id="offline-pending-count" style="font-weight: 800; color: var(--text-main);">0</span> جولة محفوظة محلياً لم ترفع بعد.
                         </span>
                     </div>
                 </div>
@@ -130,7 +131,7 @@
                     <div class="guide-progress-box">
                         <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px;">
                             <span>عيناتك المسجلة لهذا الحرف:</span>
-                            <strong id="guide-samples-progress" style="color: #38bdf8;">0 / 100 عينة</strong>
+                            <strong id="guide-samples-progress" style="color: var(--accent-text);">0 / 100 عينة</strong>
                         </div>
                         <div class="progress-bar-container" style="height: 8px;">
                             <div id="guide-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
@@ -189,11 +190,11 @@
                         </div>
 
                         <div class="controls-group" style="font-size: 0.8rem; color: var(--text-muted);">
-                            <span><kbd style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">Space</kbd> تسجيل</span>
+                            <span><kbd style="background: rgba(var(--ink-rgb), 0.1); padding: 2px 6px; border-radius: 4px;">Space</kbd> تسجيل</span>
                             <span>•</span>
-                            <span><kbd style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">N</kbd> التالي</span>
+                            <span><kbd style="background: rgba(var(--ink-rgb), 0.1); padding: 2px 6px; border-radius: 4px;">N</kbd> التالي</span>
                             <span>•</span>
-                            <span><kbd style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">P</kbd> السابق</span>
+                            <span><kbd style="background: rgba(var(--ink-rgb), 0.1); padding: 2px 6px; border-radius: 4px;">P</kbd> السابق</span>
                         </div>
                     </div>
                 </section>
@@ -218,18 +219,18 @@
             <div class="name-modal-icon">
                 <i class="fa-solid fa-user-pen"></i>
             </div>
-            <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin-bottom: 8px;">
+            <h2 style="font-size: 1.35rem; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">
                 مرحباً بك في استوديو إشارة 👋
             </h2>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
                 يرجى إدخال اسمك لتسجيل عينات لغة الإشارة باسمك وحفظ إنجازاتك في قاعدة البيانات
             </p>
             <div style="margin-bottom: 20px; text-align: right;">
-                <label for="modal-name-input" style="display: block; font-size: 0.85rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px;">
-                    اسم المساهم <span style="color: #ef4444;">*</span>:
+                <label for="modal-name-input" style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">
+                    اسم المساهم <span style="color: var(--danger);">*</span>:
                 </label>
                 <input type="text" id="modal-name-input" class="contributor-input" style="width: 100%; padding: 12px 16px; font-size: 1.05rem;" placeholder="اكتب اسمك هنا (مثال: أحمد محمد)..." autocomplete="name">
-                <div id="modal-name-error" style="color: #ef4444; font-size: 0.8rem; margin-top: 6px; display: none;">
+                <div id="modal-name-error" style="color: var(--danger); font-size: 0.8rem; margin-top: 6px; display: none;">
                     ⚠️ يرجى كتابة اسمك أولاً للمتابعة.
                 </div>
             </div>

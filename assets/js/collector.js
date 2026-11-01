@@ -390,7 +390,8 @@ class AsharaCollectorEngine {
 
     _drawCustomHandSkeleton(landmarks, w, h, isLeft) {
         const ctx = this.canvasCtx;
-        const colorMain = isLeft ? '#06b6d4' : '#10b981';
+        const css = getComputedStyle(document.documentElement);
+        const colorMain = (isLeft ? css.getPropertyValue('--amber') : css.getPropertyValue('--emerald')).trim();
         const colorPoint = '#ffffff';
 
         const connections = [

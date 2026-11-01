@@ -1,6 +1,6 @@
 /* Ashara — admin board (reuses login/header styles from tester.css) */
 
-.login-icon.admin { background: linear-gradient(135deg, #a855f7, #3b82f6); }
+.login-icon.admin { background: linear-gradient(135deg, var(--purple), var(--accent)); }
 
 .admin-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
@@ -16,10 +16,10 @@
     border-radius: var(--radius-lg);
     padding: 16px 18px;
 }
-.a-stat .v { font-family: 'Cairo', sans-serif; font-size: 1.8rem; font-weight: 900; line-height: 1.2; }
-.a-stat .v.green { color: #34d399; }
-.a-stat .v.blue { color: #60a5fa; }
-.a-stat .v.red { color: #f87171; }
+.a-stat .v { font-family: var(--font); font-size: 1.8rem; font-weight: 900; line-height: 1.2; }
+.a-stat .v.green { color: var(--emerald-text); }
+.a-stat .v.blue { color: var(--accent-text); }
+.a-stat .v.red { color: var(--danger-text); }
 .a-stat .l { color: var(--text-muted); font-size: 0.85rem; }
 
 .admin-grid {
@@ -48,16 +48,16 @@
     font: inherit;
 }
 .add-form input:focus, .search input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-.form-error { color: #f87171; font-weight: 600; font-size: 0.88rem; min-height: 1.3em; margin-top: 8px; }
+.form-error { color: var(--danger-text); font-weight: 600; font-size: 0.88rem; min-height: 1.3em; margin-top: 8px; }
 
 .new-code {
     margin-top: 6px;
-    background: rgba(16, 185, 129, 0.07);
-    border: 1px solid rgba(16, 185, 129, 0.35);
+    background: rgba(var(--emerald-rgb), 0.07);
+    border: 1px solid rgba(var(--emerald-rgb), 0.35);
     border-radius: var(--radius-md);
     padding: 14px 16px;
 }
-.new-code-head { color: #34d399; font-weight: 800; margin-bottom: 10px; }
+.new-code-head { color: var(--emerald-text); font-weight: 800; margin-bottom: 10px; }
 .cred { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed var(--card-border); }
 .cred span { color: var(--text-muted); font-size: 0.88rem; }
 .code { font-family: ui-monospace, Consolas, monospace; letter-spacing: 0.15em; font-size: 1.15rem; direction: ltr; }
@@ -90,15 +90,15 @@
 .t-name .avatar { flex-shrink: 0; }
 .t-name .n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pill { display: inline-flex; align-items: center; gap: 5px; border-radius: var(--radius-full); padding: 2px 9px; font-size: 0.74rem; font-weight: 700; }
-.pill.on { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-.pill.off { background: rgba(148, 163, 184, 0.15); color: var(--text-muted); }
-.pill.warn { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+.pill.on { background: rgba(var(--emerald-rgb), 0.15); color: var(--emerald-text); }
+.pill.off { background: rgba(var(--ink-rgb), 0.15); color: var(--text-muted); }
+.pill.warn { background: rgba(var(--danger-rgb), 0.15); color: var(--danger-text); }
 .t-code { display: flex; align-items: center; gap: 6px; }
 .t-code .code { font-size: 1rem; }
 .t-meta { color: var(--text-muted); font-size: 0.82rem; line-height: 1.5; }
 .t-actions { display: flex; gap: 6px; }
 .t-actions .icon-btn { width: 36px; height: 36px; border-radius: var(--radius-sm); }
-.t-actions .icon-btn.danger:hover { background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: rgba(239, 68, 68, 0.4); }
+.t-actions .icon-btn.danger:hover { background: rgba(var(--danger-rgb), 0.2); color: var(--danger-text); border-color: rgba(var(--danger-rgb), 0.4); }
 
 /* Dialog */
 .dialog {
