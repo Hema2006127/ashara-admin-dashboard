@@ -5,17 +5,9 @@
     "api/login.js": { "maxDuration": 10 }
   },
   "rewrites": [
-    {
-      "source": "/collector",
-      "destination": "/collector.html"
-    },
-    {
-      "source": "/tester",
-      "destination": "/tester.html"
-    },
-    {
-      "source": "/",
-      "destination": "/index.html"
-    }
+    { "source": "/collector", "destination": "/collector.html" },
+    { "source": "/tester", "destination": "/tester.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/", "destination": "/index.html" }
   ]
 }

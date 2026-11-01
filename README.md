@@ -88,8 +88,10 @@ python -m http.server 8000
 ### الإعداد (مرة واحدة)
 1. **Supabase → SQL Editor:** شغّل `supabase/model_access.sql`.
 2. **Vercel → Settings → Environment Variables:** ضيف `MODEL_SECRET` بنفس القيمة الموجودة في `.env.local` (الملف ده ما بيترفعش على GitHub)، وبعدها اعمل Redeploy.
-3. **إضافة عضو (SQL Editor):** `select add_model_tester('Ahmed');` بترجع الكود الشخصي بتاعه.
-   **سحب الصلاحية:** `update model_testers set is_active = false where name = 'Ahmed';` (الجلسة المفتوحة بتنتهي خلال 4 ساعات بالكتير).
+3. **لوحة الأدمن (`/admin`):** شغّل `supabase/model_admin.sql` في SQL Editor، وبعدها حدد الباسورد:
+   `select set_model_admin_password('باسورد-قوي');`
+   من `/admin` تقدر تضيف أعضاء، وتنسخ رسالة الدخول أو تبعتها واتساب، وتوقف أو تفعّل، وتطلّع كود جديد، وتمسح، وتغير الباسورد.
+   (الجلسة المفتوحة عند العضو بتنتهي خلال 4 ساعات بالكتير بعد إيقافه.)
 
 ### تحديث الموديل بعد تدريب جديد
 ```bash

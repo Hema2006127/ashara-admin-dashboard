@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>لوحة الأدمن — مشروع إشارة (Ashara AI)</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/tester.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <a href="index.html" class="brand">
+                <div class="brand-icon"><i class="fa-solid fa-hands-asl-interpreting"></i></div>
+                <div>
+                    <div class="brand-title">اشاره • Ashara</div>
+                    <div class="brand-sub">نظام ذكاء لغة الإشارة العربية</div>
+                </div>
+            </a>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="index.html"><i class="fa-solid fa-chart-pie"></i> لوحة التحكم والتحليلات</a></li>
+                <li class="nav-item"><a href="collector.html"><i class="fa-solid fa-camera"></i> جامع الإشارات أونلاين</a></li>
+                <li class="nav-item"><a href="tester.html"><i class="fa-solid fa-brain"></i> اختبار الموديل</a></li>
+                <li class="nav-item active"><a href="admin.html"><i class="fa-solid fa-user-gear"></i> لوحة الأدمن</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <p><i class="fa-solid fa-lock"></i> للأدمن فقط</p>
+                <p style="margin-top: 4px; font-size: 0.75rem;">مشروع تخرج 2026</p>
+            </div>
+        </aside>
+
+        <main class="main-wrapper">
+            <!-- ── Admin login ───────────────────────────────────────── -->
+            <section id="login-view" class="login-wrap">
+                <div class="login-card">
+                    <div class="login-icon admin"><i class="fa-solid fa-user-gear"></i></div>
+                    <h1>لوحة الأدمن</h1>
+                    <p class="muted">إدارة الأعضاء المسموح لهم يجربوا الموديل.</p>
+                    <form id="login-form" novalidate>
+                        <div class="field">
+                            <label for="admin-password">باسورد الأدمن</label>
+                            <div class="input-icon">
+                                <i class="fa-solid fa-lock"></i>
+                                <input id="admin-password" type="password" required autocomplete="current-password" placeholder="••••••••">
+                            </div>
+                        </div>
+                        <p id="login-error" class="login-error" role="alert"></p>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block" id="login-btn">
+                            <i class="fa-solid fa-right-to-bracket"></i> <span>دخول</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ── Admin board ───────────────────────────────────────── -->
+            <section id="admin-view" hidden>
+                <header class="tester-top">
+                    <div>
+                        <h1>إدارة أعضاء اختبار الموديل</h1>
+                        <p class="muted">ضيف الناس، ابعتلهم أكوادهم، ووقّف أي حد في أي وقت.</p>
+                    </div>
+                    <div class="admin-actions">
+                        <button class="btn btn-outline" id="refresh-btn"><i class="fa-solid fa-rotate"></i> تحديث</button>
+                        <button class="btn btn-outline" id="pw-btn"><i class="fa-solid fa-key"></i> تغيير الباسورد</button>
+                        <button class="btn btn-outline" id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> خروج</button>
+                    </div>
+                </header>
+
+                <div class="admin-stats">
+                    <div class="a-stat"><div class="v" id="st-total">0</div><div class="l">عضو مسجّل</div></div>
+                    <div class="a-stat"><div class="v green" id="st-active">0</div><div class="l">مسموح لهم</div></div>
+                    <div class="a-stat"><div class="v blue" id="st-used">0</div><div class="l">جرّبوا الموديل</div></div>
+                    <div class="a-stat"><div class="v" id="st-failed">0</div><div class="l">محاولات فاشلة (24 ساعة)</div></div>
+                </div>
+
+                <div class="admin-grid">
+                    <!-- Add -->
+                    <section class="panel">
+                        <h3><i class="fa-solid fa-user-plus"></i> إضافة عضو</h3>
+                        <form id="add-form" class="add-form" novalidate>
+                            <input id="add-name" maxlength="80" placeholder="اسم العضو (هيدخل بيه بالظبط)" autocomplete="off">
+                            <button class="btn btn-emerald" id="add-btn"><i class="fa-solid fa-plus"></i> إضافة</button>
+                        </form>
+                        <p class="form-error" id="add-error" role="alert"></p>
+
+                        <div class="new-code" id="new-code" hidden>
+                            <div class="new-code-head"><i class="fa-solid fa-circle-check"></i> اتضاف — ابعتله البيانات دي</div>
+                            <div class="cred"><span>الاسم</span><strong id="nc-name"></strong></div>
+                            <div class="cred"><span>الكود</span><strong class="code" id="nc-code"></strong></div>
+                            <div class="share-btns">
+                                <button class="btn btn-primary" id="nc-copy"><i class="fa-regular fa-copy"></i> نسخ الرسالة</button>
+                                <a class="btn btn-emerald" id="nc-wa" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> واتساب</a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- How it works -->
+                    <section class="panel">
+                        <h3><i class="fa-solid fa-circle-info"></i> إزاي بيشتغل</h3>
+                        <ol class="howto">
+                            <li>ضيف اسم العضو، وهيطلع له كود من 8 حروف.</li>
+                            <li>ابعتله الرسالة: فيها لينك صفحة الاختبار والاسم والكود.</li>
+                            <li>«إيقاف» بيمنعه يدخل تاني. «كود جديد» بيبطّل الكود القديم.</li>
+                            <li>اللي داخل فعلاً بتفضل جلسته شغالة لحد 4 ساعات بالكتير.</li>
+                        </ol>
+                    </section>
+                </div>
+
+                <!-- List -->
+                <section class="panel">
+                    <div class="list-head">
+                        <h3><i class="fa-solid fa-users"></i> الأعضاء</h3>
+                        <div class="input-icon search">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input id="search" placeholder="بحث بالاسم" autocomplete="off">
+                        </div>
+                    </div>
+                    <div id="testers" class="testers">
+                        <div class="empty"><i class="fa-solid fa-spinner fa-spin"></i> جاري التحميل...</div>
+                    </div>
+                </section>
+            </section>
+        </main>
+    </div>
+
+    <!-- Change password dialog -->
+    <dialog id="pw-dialog" class="dialog">
+        <form id="pw-form" method="dialog" novalidate>
+            <h3><i class="fa-solid fa-key"></i> تغيير باسورد الأدمن</h3>
+            <div class="field">
+                <label for="pw-old">الباسورد الحالي</label>
+                <div class="input-icon"><i class="fa-solid fa-lock"></i><input id="pw-old" type="password" autocomplete="current-password"></div>
+            </div>
+            <div class="field">
+                <label for="pw-new">الباسورد الجديد (8 حروف على الأقل)</label>
+                <div class="input-icon"><i class="fa-solid fa-key"></i><input id="pw-new" type="password" autocomplete="new-password"></div>
+            </div>
+            <p class="form-error" id="pw-error" role="alert"></p>
+            <div class="dialog-btns">
+                <button type="button" class="btn btn-outline" id="pw-cancel">إلغاء</button>
+                <button type="submit" class="btn btn-primary" id="pw-save">حفظ</button>
+            </div>
+        </form>
+    </dialog>
+
+    <div id="realtime-toast"></div>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/admin.js"></script>
+</body>
+
+</html>
