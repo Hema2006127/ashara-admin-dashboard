@@ -36,61 +36,137 @@
         </aside>
 
         <main class="main-wrapper">
-            <!-- Login -->
-            <section id="login-view" class="tester-login card">
-                <div class="login-icon"><i class="fa-solid fa-user-lock"></i></div>
-                <h1>اختبار موديل الحروف</h1>
-                <p class="muted">الدخول للأعضاء المسموح لهم فقط. كل دخول بيتسجل باسمك.</p>
-                <form id="login-form" autocomplete="on">
-                    <label for="login-name">الاسم</label>
-                    <input id="login-name" name="name" required maxlength="80" placeholder="اسمك زي ما الأدمن سجّله">
-                    <label for="login-code">كود الدخول</label>
-                    <input id="login-code" name="code" required maxlength="40" placeholder="الكود الشخصي (8 حروف)" autocomplete="off">
-                    <button type="submit" class="btn btn-primary btn-lg" id="login-btn">
-                        <i class="fa-solid fa-right-to-bracket"></i> دخول
-                    </button>
-                    <p id="login-error" class="login-error" role="alert"></p>
-                </form>
-                <p class="muted small">مش معاك كود؟ اطلبه من الأدمن.</p>
+            <!-- ── Login ─────────────────────────────────────────────── -->
+            <section id="login-view" class="login-wrap">
+                <div class="login-card">
+                    <div class="login-icon"><i class="fa-solid fa-hands-asl-interpreting"></i></div>
+                    <h1>اختبار موديل الحروف</h1>
+                    <p class="muted">جرّب الموديل لايف بالكاميرا. الدخول للأعضاء المسموح لهم فقط.</p>
+
+                    <form id="login-form" autocomplete="on" novalidate>
+                        <div class="field">
+                            <label for="login-name">الاسم</label>
+                            <div class="input-icon">
+                                <i class="fa-solid fa-user"></i>
+                                <input id="login-name" name="name" required maxlength="80" placeholder="اسمك زي ما الأدمن سجّله" autocomplete="username">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="login-code">كود الدخول</label>
+                            <div class="input-icon">
+                                <i class="fa-solid fa-key"></i>
+                                <input id="login-code" name="code" required maxlength="40" placeholder="A1B2C3D4" autocomplete="off" spellcheck="false" dir="ltr">
+                            </div>
+                        </div>
+                        <p id="login-error" class="login-error" role="alert"></p>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block" id="login-btn">
+                            <i class="fa-solid fa-right-to-bracket"></i> <span>دخول</span>
+                        </button>
+                    </form>
+
+                    <ul class="login-points">
+                        <li><i class="fa-solid fa-shield-halved"></i> الموديل بيشتغل على السيرفر، ومش بيتنزّل على جهازك</li>
+                        <li><i class="fa-solid fa-video"></i> الكاميرا بتفضل على جهازك، وبيتبعت بس مكان نقط الإيد</li>
+                        <li><i class="fa-solid fa-clipboard-list"></i> كل دخول بيتسجل باسمك</li>
+                    </ul>
+                </div>
             </section>
 
-            <!-- Tester -->
+            <!-- ── Tester ────────────────────────────────────────────── -->
             <section id="tester-view" hidden>
-                <div class="tester-top">
+                <header class="tester-top">
                     <div>
-                        <h1><span class="live-pulse"></span> اختبار موديل الحروف لايف</h1>
-                        <p class="muted">اعمل إشارة الحرف قدام الكاميرا وثبّتها ثانية.</p>
+                        <h1>اختبار موديل الحروف</h1>
+                        <p class="muted">اعمل إشارة الحرف قدام الكاميرا وثبّت إيدك ثانية واحدة.</p>
                     </div>
-                    <div class="tester-user">
+                    <div class="user-chip">
+                        <span class="avatar" id="user-avatar">?</span>
                         <span id="tester-name"></span>
-                        <button id="logout-btn" class="btn btn-outline"><i class="fa-solid fa-right-from-bracket"></i> خروج</button>
+                        <button id="logout-btn" class="icon-btn" title="خروج" aria-label="خروج"><i class="fa-solid fa-right-from-bracket"></i></button>
                     </div>
-                </div>
+                </header>
 
                 <div class="tester-grid">
-                    <div class="camera-box card">
-                        <video id="tester-video" playsinline muted></video>
-                        <canvas id="tester-canvas"></canvas>
-                        <div id="camera-hint" class="camera-hint"><i class="fa-solid fa-video"></i> اضغط «تشغيل الكاميرا»</div>
-                        <button id="start-cam-btn" class="btn btn-emerald btn-lg cam-start"><i class="fa-solid fa-video"></i> تشغيل الكاميرا</button>
+                    <!-- Camera -->
+                    <div class="camera-card">
+                        <div class="camera-box">
+                            <video id="tester-video" playsinline muted></video>
+                            <canvas id="tester-canvas"></canvas>
+
+                            <div id="camera-empty" class="camera-empty">
+                                <div class="camera-empty-icon"><i class="fa-solid fa-video"></i></div>
+                                <h2>شغّل الكاميرا عشان تبدأ</h2>
+                                <p>هيطلب منك المتصفح إذن استخدام الكاميرا.</p>
+                                <button id="start-cam-btn" class="btn btn-emerald btn-lg"><i class="fa-solid fa-play"></i> تشغيل الكاميرا</button>
+                            </div>
+
+                            <div class="hud" id="hud" hidden>
+                                <span class="hud-chip" id="hud-hand"><i class="fa-solid fa-hand"></i> مستني الإيد</span>
+                                <span class="hud-chip" id="hud-latency" title="زمن رد السيرفر"><i class="fa-solid fa-bolt"></i> — ms</span>
+                            </div>
+                            <div class="cam-pred" id="cam-pred" hidden>
+                                <span class="cam-pred-letter" id="cam-pred-letter"></span>
+                                <span class="cam-pred-conf" id="cam-pred-conf"></span>
+                            </div>
+                        </div>
+                        <div class="camera-tips">
+                            <span><i class="fa-regular fa-lightbulb"></i> إضاءة كويسة</span>
+                            <span><i class="fa-solid fa-up-down-left-right"></i> الإيد كاملة جوه الكادر</span>
+                            <span><i class="fa-solid fa-hand"></i> ثبّت الإشارة</span>
+                        </div>
                     </div>
 
-                    <div class="result-box card">
-                        <div class="muted">الحرف المتوقع</div>
-                        <div id="pred-letter" class="pred-letter">—</div>
-                        <div id="pred-conf" class="pred-conf"></div>
-                        <div id="pred-status" class="pred-status">ضع يدك في الكادر</div>
+                    <!-- Result -->
+                    <aside class="result-card">
+                        <div class="ring" id="ring" style="--p: 0">
+                            <div class="ring-inner">
+                                <span id="pred-letter" class="pred-letter is-empty"><i class="fa-solid fa-hand"></i></span>
+                            </div>
+                        </div>
+                        <div class="pred-name" id="pred-name">مستني إشارة</div>
+                        <div class="pred-conf" id="pred-conf"></div>
+                        <div class="pred-status" id="pred-status">حط إيدك قدام الكاميرا</div>
 
-                        <div class="muted top3-title">أعلى 3 احتمالات</div>
-                        <div id="top3" class="top3"></div>
+                        <div class="section-label">أعلى 3 احتمالات</div>
+                        <div id="top3" class="top3">
+                            <div class="top3-empty">هتظهر هنا أول ما الموديل يشوف إيد</div>
+                        </div>
 
-                        <div class="model-meta" id="model-meta"></div>
-                    </div>
+                        <div class="ref-card" id="ref-card" hidden>
+                            <img id="ref-img" alt="">
+                            <div>
+                                <div class="ref-title" id="ref-title"></div>
+                                <div class="ref-hint" id="ref-hint"></div>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
+
+                <!-- Practice: pick a letter -->
+                <section class="practice-card">
+                    <div class="practice-head">
+                        <div>
+                            <h3><i class="fa-solid fa-bullseye"></i> تمرّن على حرف</h3>
+                            <p class="muted">اختار حرف، اعمل إشارته، والموديل هيقولك لو صح.</p>
+                        </div>
+                        <div class="target-box" id="target-box" hidden>
+                            <img id="target-img" alt="">
+                            <div>
+                                <div class="target-label">الحرف المطلوب</div>
+                                <div class="target-letter" id="target-letter"></div>
+                            </div>
+                            <div class="target-result" id="target-result"></div>
+                            <button class="icon-btn" id="target-clear" title="إلغاء" aria-label="إلغاء الحرف المطلوب"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                    </div>
+                    <div class="letters-grid" id="letters-grid"></div>
+                    <div class="model-meta" id="model-meta"></div>
+                </section>
             </section>
         </main>
     </div>
 
+    <script src="assets/js/config.js"></script>
     <script src="assets/js/tester.js"></script>
 </body>
 

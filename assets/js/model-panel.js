@@ -6,7 +6,7 @@
     const $ = id => document.getElementById(id);
     const pct = v => (v == null ? '—' : `${(v * 100).toFixed(1)}%`);
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    const fmtDate = d => new Date(d).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' });
+    const fmtDate = d => new Date(d).toLocaleString('ar-EG-u-nu-latn', { dateStyle: 'medium', timeStyle: 'short' });
 
     function device(ua) {
         ua = ua || '';
@@ -23,15 +23,10 @@
             $('model-test-acc').textContent = pct(info.test_accuracy);
             $('model-val-acc').textContent = pct(info.val_accuracy);
             $('model-classes').textContent = info.num_classes;
-            $('model-trained').textContent = new Date(info.trained_at).toLocaleDateString('ar-EG', { dateStyle: 'medium' });
+            $('model-trained').textContent = new Date(info.trained_at).toLocaleDateString('ar-EG-u-nu-latn', { dateStyle: 'medium' });
 
-            const rows = [
-                { date: info.trained_at.slice(0, 10), data: 'ArASL + عينات الفريق (Supabase)', classes: info.num_classes, test_accuracy: info.test_accuracy, current: true },
-                ...[...(info.history || [])].reverse(),
-            ];
-            $('model-history-body').innerHTML = rows.map(r =>
-                `<tr${r.current ? ' class="row-current"' : ''}><td>${esc(r.date)}${r.current ? ' <span class="badge-current">الحالي</span>' : ''}</td>` +
-                `<td>${esc(r.data)}</td><td>${esc(r.classes)}</td><td><strong>${pct(r.test_accuracy)}</strong></td></tr>`).join('');
+            $('model-data').textContent = info.training_data || '—';
+            $('model-letters').innerHTML = (info.labels || []).map(l => `<span>${esc(l)}</span>`).join('');
         } catch (e) {
             console.warn('model-info.json not available', e);
         }

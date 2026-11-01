@@ -57,6 +57,12 @@ h1, h2, h3, h4, h5, h6, .font-cairo {
     font-family: 'Cairo', sans-serif;
 }
 
+/* `hidden` must win over component display rules (e.g. .btn { display: inline-flex }) */
+[hidden] { display: none !important; }
+
+/* Visible keyboard focus */
+:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;

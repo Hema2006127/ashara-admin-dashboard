@@ -201,16 +201,14 @@
                 <div class="model-grid">
                     <div class="chart-card">
                         <div class="chart-header">
-                            <h3><i class="fa-solid fa-arrow-trend-up" style="color: var(--emerald);"></i> تطور دقة الموديل</h3>
+                            <h3><i class="fa-solid fa-circle-info" style="color: var(--emerald);"></i> عن الموديل</h3>
                         </div>
-                        <div class="table-container">
-                            <table class="activity-table">
-                                <thead>
-                                    <tr><th>التاريخ</th><th>البيانات</th><th>الحروف</th><th>دقة Test</th></tr>
-                                </thead>
-                                <tbody id="model-history-body"></tbody>
-                            </table>
-                        </div>
+                        <dl class="model-facts">
+                            <div><dt>بيانات التدريب</dt><dd id="model-data">—</dd></div>
+                            <div><dt>نوع الموديل</dt><dd>شبكة عصبية (MLP) على 126 نقطة من نقط الإيدين</dd></div>
+                            <div><dt>بيشتغل فين</dt><dd>على السيرفر فقط — مش بيتنزّل عند المستخدم</dd></div>
+                        </dl>
+                        <div class="model-letters" id="model-letters"></div>
                     </div>
 
                     <div class="chart-card">
