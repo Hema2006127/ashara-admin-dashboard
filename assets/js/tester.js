@@ -84,6 +84,7 @@
             alert('تعذر تحميل MediaPipe — تأكد من الإنترنت وأعد تحميل الصفحة.');
             return;
         }
+        fetch('/api/predict', { method: 'GET', cache: 'no-store' }).catch(() => { });  // warm the model while the camera starts
         const btn = $('start-cam-btn');
         btn.disabled = true;
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التشغيل...';
@@ -320,6 +321,9 @@
     }
 
     // ── Init ──────────────────────────────────────────────────────────────
+    // Wake the server-side model now, so the first prediction isn't slowed by a cold start.
+    fetch('/api/predict', { method: 'GET', cache: 'no-store' }).catch(() => { });
+
     loadSession();
     showView();
     buildLettersGrid();
